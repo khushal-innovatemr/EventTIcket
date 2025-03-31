@@ -1,0 +1,23 @@
+<div class="container mx-auto">
+    <h2 class="text-center my-4 text-2xl font-semibold">Events You have to Attend</h2>
+  
+    <div *ngIf="noeventmessage" class="bg-blue-100 border border-blue-300 text-blue-700 p-4 rounded-lg mb-4 shadow-md">
+      {{ noeventmessage }}
+    </div>
+   
+    <div *ngIf="events?.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let event of events; let i =index" class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+        <div class="p-6">
+          <h5 class="text-xl font-bold text-blue-600"><strong>{{i+1}}.Event Name: </strong>{{ event.Event_name }}</h5>
+          <!-- <h3 class="text-gray-600">Organised By: {{name }}</h3> -->
+          <h3 class="text-gray-600"><strong>Organised By:</strong> {{ event.org }}</h3>
+          <h3 class="text-gray-600 my-2"><strong>Event_id: </strong>{{ event.Event_id }}</h3>
+          <h3 class="text-gray-600"><strong>Booking_id:</strong>{{ event.Booking_id }}</h3>
+          <h3 class="text-gray-600"><strong>Event Date: </strong>{{ formatDate(event.Event_Date) }}</h3>
+          <!-- <h3 class="text-gray-600"><strong>Event_date:</strong>{{ event.Event_date }}</h3> -->
+          <h3 class="text-gray-600"><strong>Booking Date: </strong>{{ formatDate(event.date) }}</h3>
+          <h3 class="text-gray-600"><strong>Tickets Purchased:</strong> {{event.Ticket}} </h3>
+        </div>
+      </div>
+    </div>
+  </div> 

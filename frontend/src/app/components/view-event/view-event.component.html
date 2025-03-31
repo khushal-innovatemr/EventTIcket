@@ -1,0 +1,37 @@
+<div class="container mx-auto">
+  <h2 class="text-center my-4 text-2xl font-semibold">Events Coming Soon</h2>
+  <div *ngIf="noeventmessage" class="bg-blue-100 border border-blue-300 text-blue-700 p-4 rounded-lg mb-4 shadow-md">
+    {{ noeventmessage }}
+  </div>
+  <div *ngIf="events.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let event of events" class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+      <div class="p-6">
+        <h5 class="text-xl font-bold text-blue-600">Event name: {{ event.name }}</h5>
+        <div class="text-gray-600"><strong>Organized By:</strong> {{ event.org }}</div>
+        <div class="text-gray-600"><strong>Event ID:</strong> {{ event.Event_id }}</div>
+        <div class="text-gray-600 my-2"><strong>Event Description: </strong>{{ event.description }}</div>
+        <div class="text-gray-600"><strong>Date:</strong> {{ formatDate(event.Event_date)}}</div>
+        <div class="text-gray-600"><strong>Venue:</strong> {{ event.venue }}</div>
+        <div class="text-gray-600"><strong>Ticket Price:</strong> {{ event.ticket_price }}</div>
+        <div class="text-gray-600"><strong>Type:</strong> {{ event.type }}</div>
+        <div class="text-gray-600"><strong>Available Tickets:</strong> {{ event.avail_ticket }}</div>
+        <div *ngIf="event.image_url" class="h-64 overflow-hidden">
+          <img [src]="event.image_url" alt="Event Image" class="w-full h-full object-cover">
+        </div>
+        <br>
+        
+        <div>
+          <label for="name" class="text-gray-600">How many Tickets?</label>
+          <input 
+            type="Number" 
+            [(ngModel)]="event.Ticket" 
+            name="Tickets" 
+            placeholder="No of Tickets" 
+            required 
+            class="p-3 rounded-md border border-gray-300 text-gray-600 outline-none transition" />
+          <button (click)="book(event.Event_id)" class="font-semibold shadow-blue text-blue-700">Book Event</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
