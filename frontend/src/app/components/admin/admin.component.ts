@@ -44,6 +44,8 @@ export class AdminComponent {
       this.eventService.getUsers().subscribe({
         next: (res: any) => {
           this.tasks = res; 
+          console.log('tttttttttttttttttttttttttttttttttttttt',this.tasks );
+          
       },
         error: (error: any) => {
           console.error('Error Fetching Users', error);
@@ -59,13 +61,12 @@ deleteUser(userId: string): void {
   if (!userId) {
       console.log("sssssssssssssssssssssssssssssssssssss ")
       console.log('No user selected for deletion');
-      return;
   }
   console.log('Trying to delete user with ID:', userId);
   this.authService.Delete_user(userId).subscribe({
       next: () => {
-          console.log('User Deleted Successfully:', userId);
-          this.tasks = this.tasks.filter((u: any) => u.id !== userId);
+        this.tasks = this.tasks.filter((u: any) => u.id !== userId);
+        console.log('User Deleted Successfully:', this.tasks );
           if (this.currentUserId === userId) {
               this.views = [];
               this.showTasks = false;

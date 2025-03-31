@@ -119,7 +119,7 @@ router.get('/views', verify, async (req, res) => {
     console.log('x',role);        
     if (req.user.role === 'admin') {
       try {
-        const users = await User.find({ role: { $in: ['user', 'organizer'] } }, 'name email role');
+        const users = await User.find({ role: { $in: ['user', 'organizer'] } }, 'name email role userId');
         return res.json(users);
       } catch (err) {
         console.error("Fetching users error:", err);

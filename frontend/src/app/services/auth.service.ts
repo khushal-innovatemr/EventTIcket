@@ -45,7 +45,7 @@ export class AuthService {
   Delete_user(userId: string): Observable<any> { 
     console.log('-------------------------x-----------------')
     console.log('Deleting user with ID:', userId);
-    return this.http.delete(`${this.API_URL}/user-delete/${userId}`);
+    return this.http.delete(`${this.API_URL}/user-delete/${userId}`,this.header_options);
   }
 
 }
