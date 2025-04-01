@@ -13,9 +13,10 @@
           <h3 class="text-gray-600"><strong>Organised By:</strong> {{ event.org }}</h3>
           <h3 class="text-gray-600 my-2"><strong>Event_id: </strong>{{ event.Event_id }}</h3>
           <h3 class="text-gray-600"><strong>Booking_id:</strong>{{ event.Booking_id }}</h3>
+          <h3 class="text-gray-600"><strong>Ticket_id:</strong>{{ event.Ticket_id}}</h3>
           <h3 class="text-gray-600"><strong>Event Date: </strong>{{ formatDate(event.Event_Date) }}</h3>
           <!-- <h3 class="text-gray-600"><strong>Event_date:</strong>{{ event.Event_date }}</h3> -->
-          <h3 class="text-gray-600"><strong>Booking Date: </strong>{{ formatDate(event.date) }}</h3>
+          <h3 class="text-gray-600"><strong>Booking Date: </strong>{{ event.date }}</h3>
           <h3 class="text-gray-600"><strong>Tickets Purchased:</strong> {{event.Ticket}} </h3>
         </div>
       </div>

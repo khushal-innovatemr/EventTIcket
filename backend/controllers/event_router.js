@@ -80,6 +80,7 @@ router.post('/book/:id', verify, async (req, res) => {
     try {
         const {Ticket} = req.body;
         const Booking_id = req.user.userId;
+        const ticket_id = uuidv4();
         const evId = req.params.id; 
     
         
@@ -95,13 +96,17 @@ router.post('/book/:id', verify, async (req, res) => {
             return res.status(400).json({ message: "No tickets available" });
         }
 
+        if (Ticket>5){
+            console.log("max tickets exceeded by",Ticket-5)
+            return res.status(400).json({message:"No more tickets can be booked",Tickets_Exceeded_by:Ticket-5});
+        }
         const existingBooking = await Booking.findOne({ Booking_id:Booking_id, Event_id: evId });
         // if (existingBooking) {
         //     return res.status(400).json({ message: "You have already booked the ticket" });
         // }
 
         const date = Date.now();
-        const newBooking = new Booking({ Booking_id,org:mb, Event_id: evId,Event_Date:mc,Event_name:ab, date ,Ticket});
+        const newBooking = new Booking({ Booking_id,org:mb, Event_id: evId,Event_Date:mc,Event_name:ab, date ,Ticket,Ticket_id:ticket_id});
         
         event.avail_ticket -= Ticket;
         const updateResult = await Event.updateOne({ Event_id: evId }, { avail_ticket: event.avail_ticket });
@@ -113,6 +118,23 @@ router.post('/book/:id', verify, async (req, res) => {
         return res.status(500).json({ error: "Server Error" });
     }
 });
+
+router.post('/cancel/:id',async(req,res) => {
+    try{
+        const {Event_id,ticket_id,ticket} = req.params;
+        const booking = await Booking.findOneAndDelete({Ticket_id:ticket_id});
+        if (!booking) {
+            return res.status(400).json({ message: "Booking not found" });
+        }
+        const event = await Event.findOne({ Event_id: evId });
+        event.avail_ticket = event.avail_ticket
+        await Event.updateOne({avail_ticket:avail_ticket});
+        
+        res.status(200).json({ message: "Booking cancelled successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "An error occurred", error });
+    }
+})
 
 router.get('/views', verify, async (req, res) => {
     const role = req.user.role;

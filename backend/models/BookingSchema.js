@@ -28,6 +28,10 @@ const BookingSchema = new mongoose.Schema({
     Ticket:{
         type:Number,
         required:true
+    },
+    Ticket_id:{
+        type:String,
+        required:true,
     }
 })
 

@@ -54,5 +54,10 @@ export class EventService {
     return this.http.delete(`${this.API_URL}/delete/${Event_id}`);
   }
 
+  Cancel_Ticket(Ticket_id:string): Observable<any> {
+    console.log('Deleting Bookings with ID:',Ticket_id);
+    return this.http.delete(`${this.API_URL}/cancel/${Ticket_id}`)
+  }
+
 }
 

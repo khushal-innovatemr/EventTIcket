@@ -11,7 +11,7 @@ const EventSchema = new mongoose.Schema({
     venue:{type:String,required:true},
     description:{type:String,required:true},
     image_url:{data: Buffer, contentType: String},
-    avail_ticket:{type:Number,max:100},
+    avail_ticket:{type:Number,max:200},
    
 })
 
