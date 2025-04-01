@@ -17,6 +17,7 @@ export class EventService {
     const token = this.authService.getToken();
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
+      
     });
   }
 
@@ -54,10 +55,10 @@ export class EventService {
     return this.http.delete(`${this.API_URL}/delete/${Event_id}`);
   }
 
-  Cancel_Ticket(Ticket_id:string): Observable<any> {
-    console.log('Deleting Bookings with ID:',Ticket_id);
-    return this.http.delete(`${this.API_URL}/cancel/${Ticket_id}`)
-  }
+  Cancel_Ticket(Ticket_id: string): Observable<any> {
+    console.log('Deleting Bookings with ID:', Ticket_id);
+    return this.http.post<any>(`${this.API_URL}/cancel/${Ticket_id}`,{headers:this.getHeaders(),withCredentials:true});
+}
 
 }
 
