@@ -119,22 +119,26 @@ router.post('/book/:id', verify, async (req, res) => {
     }
 });
 
-router.post('/cancel/:id',async(req,res) => {
-    try{
-        const {Event_id,ticket_id,ticket} = req.params;
-        const booking = await Booking.findOneAndDelete({Ticket_id:ticket_id});
+router.post('/cancel/:ticket_id', async (req, res) => {
+    try {
+        const ticket_id  = req.params.id;
+        
         if (!booking) {
             return res.status(400).json({ message: "Booking not found" });
         }
-        const event = await Event.findOne({ Event_id: evId });
-        event.avail_ticket = event.avail_ticket
-        await Event.updateOne({avail_ticket:avail_ticket});
+        const event = await Event.findOne({ Event_id: booking.Event_id });
+        if (!event) {
+            return res.status(400).json({ message: "Event not found" });
+        }
+        event.avail_ticket += booking.Ticket;
+        const booking = await Booking.findOneAndDelete({ Ticket_id: ticket_id });
+        await event.save();
         
         res.status(200).json({ message: "Booking cancelled successfully" });
     } catch (error) {
         res.status(500).json({ message: "An error occurred", error });
     }
-})
+});
 
 router.get('/views', verify, async (req, res) => {
     const role = req.user.role;

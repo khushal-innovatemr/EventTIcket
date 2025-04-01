@@ -15,6 +15,9 @@ export class UserViewComponent {
   noeventmessage: any;
   name: any;
   tickets:any;
+  curr_Ticket_id: any;
+  views: any;
+  showTasks: boolean = false;
 
   constructor(private eventService: EventService, private router: Router) { }
 
@@ -42,6 +45,29 @@ export class UserViewComponent {
       }
     });
   }
+
+  cancel_ticket(Ticket_id: string): void {
+    if (!Ticket_id) {
+        console.log('No Booking selected for deletion');
+    }
+    console.log('Trying to delete user with ID:', Ticket_id);
+    this.eventService.Cancel_Ticket(Ticket_id).subscribe({
+        next: () => {
+          console.log(this.events)
+          this.events = this.events.filter((u: any) => u.Ticket_id !== Ticket_id);
+          console.log('Booking Deleted Successfully:', this.events );
+            if (this.curr_Ticket_id === Ticket_id) {
+                this.views = [];
+                this.showTasks = false;
+                this.curr_Ticket_id = '';
+              }
+        },
+        error: (error: any) => {
+            console.error('Error Deleting User:', error);
+        }
+    }); 
+  }
+
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);

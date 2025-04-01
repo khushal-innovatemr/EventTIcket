@@ -7,7 +7,9 @@ const PORT = 3000;
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+// const mongoose  =require('mongoose');
 
+// mongoose.set('debug',true);
 
 app.use(express.json())
 app.use(cors({

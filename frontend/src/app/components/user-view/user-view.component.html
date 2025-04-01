@@ -19,6 +19,7 @@
           <h3 class="text-gray-600"><strong>Booking Date: </strong>{{ event.date }}</h3>
           <h3 class="text-gray-600"><strong>Tickets Purchased:</strong> {{event.Ticket}} </h3>
         </div>
+        <button (click)="cancel_ticket(event.Ticket_id)" class="bg-red-600 ml-40">Cancel Ticket</button>
       </div>
     </div>
   </div> 
