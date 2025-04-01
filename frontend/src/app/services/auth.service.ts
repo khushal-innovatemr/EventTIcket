@@ -18,6 +18,13 @@ export class AuthService {
     withCredentials: true
   };
 
+  private getHeaders(): HttpHeaders {
+    const token = this.getToken();
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.API_URL}/login`, { email, password}, this.header_options);
   }
@@ -45,7 +52,7 @@ export class AuthService {
   Delete_user(userId: string): Observable<any> { 
     console.log('-------------------------x-----------------')
     console.log('Deleting user with ID:', userId);
-    return this.http.delete(`${this.API_URL}/user-delete/${userId}`,this.header_options);
+    return this.http.delete(`${this.API_URL}/user-delete/${userId}`,{headers:this.getHeaders(),withCredentials:true});
   }
 
 }

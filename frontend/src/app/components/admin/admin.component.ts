@@ -13,13 +13,15 @@ import { EventService } from '../../services/event.service';
 })
 export class AdminComponent {
   flag: boolean = false;
-  tasks: any;
+  tasks: any; 
   user: any;
   currentUserId: any;
   showTasks: boolean = false;
   views: any;
 
   constructor(private authService: AuthService, private eventService:EventService,private router: Router) {}
+
+
 
   adminregister(): void {
     this.router.navigate(['/admin-register']);
@@ -65,14 +67,13 @@ deleteUser(userId: string): void {
   console.log('Trying to delete user with ID:', userId);
   this.authService.Delete_user(userId).subscribe({
       next: () => {
-        this.tasks = this.tasks.filter((u: any) => u.id !== userId);
+        this.tasks = this.tasks.filter((u: any) => u.userId !== userId);
         console.log('User Deleted Successfully:', this.tasks );
           if (this.currentUserId === userId) {
               this.views = [];
               this.showTasks = false;
               this.currentUserId = '';
-              this.CheckUser();
-          }
+            }
       },
       error: (error: any) => {
           console.error('Error Deleting User:', error);

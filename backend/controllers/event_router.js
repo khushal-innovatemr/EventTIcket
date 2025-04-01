@@ -156,24 +156,28 @@ router.get('/organizer', verify, async (req, res) => {
         image_url: (event.image_url && event.image_url.data) 
             ? `data:${event.image_url.contentType};base64,${event.image_url.data.toString('base64')}` 
             : null
-    }));
+    }));  
 
     return res.json(eventsWithImageUrl);
 });
 
-router.delete("delete/:id", verify, async (req, res) => {
+
+router.delete("/delete/:id", async (req, res) => {
     try {
         const id = req.params.id;
-        const deletedTask = await Event.findOneAndDelete({ Event_id: id });
+        console.log(id);
+        await Booking.deleteMany({Event_id:id});
+        console.log(`Booking for all users with ${id} deleted succesfully`)
+        const Event_Deleted = await Event.findOneAndDelete({ Event_id: id });
 
-        if (!deletedTask) {
+        if (!Event_Deleted) {
             console.log("Delete Failed");
-            return res.status(404).json({ error: "Task Not Found" });
+            return res.json({ error: "Event Not Found" });
         }
-        return res.status(200).json({ message: "Task Deleted Successfully" });
+        return res.json({ message: "Event Deleted Successfully" });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.json({ error: "Internal Server Error" });
     }
 });
 

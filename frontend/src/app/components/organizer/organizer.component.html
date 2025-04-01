@@ -28,7 +28,7 @@
             <h3 class="text-gray-600"><strong>Price: </strong>{{ event.ticket_price }}</h3>
             <h3 class="text-gray-600"><strong>Venue: </strong> {{event.venue}} </h3>
             <h3 class="text-gray-600"><strong>description: </strong> {{event.description}} </h3>
-            <!-- <h3 class="text-gray-600"><strong>Tickets Left: </strong> {{event.avail_ticket}} </h3> -->
+            <h3 class="text-gray-600"><strong>Tickets Available: </strong> {{event.avail_ticket}} </h3>
             <div *ngIf="event.image_url" class="h-64 overflow-hidden">
                 <img [src]="event.image_url" alt="Event Image" class="w-full h-full object-cover">
             </div>

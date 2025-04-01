@@ -44,14 +44,13 @@ export class EventService {
   generateTicket():Observable<any> {
     return this.http.get(`${this.API_URL}/ticket`,{headers:this.getHeaders(),withCredentials:true});
   }
-
+ 
   organize_view():Observable<any> {
     return this.http.get(`${this.API_URL}/organizer`,{headers:this.getHeaders(),withCredentials:true})
   }
 
   Delete_event(Event_id: string): Observable<any> { 
-    console.log('asdfahkjdfslllllllllllllllllfaasnjfdx')
-    console.log('Deleting user with ID:', Event_id);
+    console.log('Deleting Bookings with ID:', Event_id);
     return this.http.delete(`${this.API_URL}/delete/${Event_id}`);
   }
 

@@ -17,6 +17,9 @@ export class AdminViewComponent {
   books: any;
   errorMessage: any;
   Ticket: any;
+  showTasks:boolean = false;
+  views:any;
+  currentEventId:any;
 
   constructor(private eventService: EventService, private router: Router) { }
 
@@ -44,6 +47,30 @@ export class AdminViewComponent {
         }
     });
 }
+
+delete_event(Event_id: string): void {
+  if (!Event_id) {
+      console.log("sssssssssssssssssssssssssssssssssssss ")
+      console.log('No Event selected for deletion');
+  }
+  console.log('Trying to delete user with ID:', Event_id);
+  this.eventService.Delete_event(Event_id).subscribe({
+      next: () => {
+        console.log(this.events)
+        this.events = this.events.filter((u: any) => u.Event_id !== Event_id);
+        console.log('User Deleted Successfully:', this.events );
+          if (this.currentEventId === Event_id) {
+              this.views = [];
+              this.showTasks = false;
+              this.currentEventId = '';
+            }
+      },
+      error: (error: any) => {
+          console.error('Error Deleting User:', error);
+      }
+  }); 
+}
+
 
 formatDate(dateString: string): string {
   const date = new Date(dateString);

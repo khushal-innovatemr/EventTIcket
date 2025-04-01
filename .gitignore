@@ -5,3 +5,5 @@ node_modules/
 .env
 
 # Other entries...
+package-lock.json
+package-lock.json
