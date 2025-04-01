@@ -123,6 +123,7 @@ router.post('/cancel/:Ticket_id',async (req, res) => {
     try {
         const Ticket_id = req.params.Ticket_id;
         console.log(Ticket_id);
+        
         const booking = await Booking.findOneAndDelete({ Ticket_id: Ticket_id });
 
         if (!booking) {
@@ -137,6 +138,8 @@ router.post('/cancel/:Ticket_id',async (req, res) => {
 
         event.avail_ticket += booking.Ticket;
         await event.save();
+
+
 
         res.status(200).json({ message: "Booking cancelled successfully" });
     } catch (error) {
