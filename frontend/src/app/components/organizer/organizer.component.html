@@ -32,6 +32,9 @@
             <div *ngIf="event.image_url" class="h-64 overflow-hidden">
                 <img [src]="event.image_url" alt="Event Image" class="w-full h-full object-cover">
             </div>
+            <div class="p-6">
+              <button (click)="delete_event(event.Event_id)" class="bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 transition duration-300">Delete</button>
+            </div>
         </div>
       </div>
     </div>
