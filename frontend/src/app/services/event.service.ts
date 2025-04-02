@@ -34,7 +34,7 @@ export class EventService {
   }
 
   book_event(eventId: string,Ticket:number): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');  
     return this.http.post(`${this.API_URL}/book/${eventId}`, {Ticket}, {headers:this.getHeaders() });
   }
 
@@ -59,6 +59,17 @@ export class EventService {
     console.log('Deleting Bookings with ID:', Ticket_id);
     return this.http.post<any>(`${this.API_URL}/cancel/${Ticket_id}`,{headers:this.getHeaders(),withCredentials:true});
 }
+
+  Approve_Booking(Ticket_id:string): Observable<any> {
+    console.log('Approval of Booking with ID:',Ticket_id);
+    return this.http.post<any>(`${this.API_URL}/approval/${Ticket_id}`,{headers:this.getHeaders(),withCredentials:true});
+  }
+
+  Reject_Booking(Ticket_id:string): Observable<any> {
+    console.log('Booking with ID:',Ticket_id, 'is Rejected');
+    return this.http.post<any>(`${this.API_URL}/reject/${Ticket_id}`,{headers:this.getHeaders(),withCredentials:true})
+  }
+
 
 }
 

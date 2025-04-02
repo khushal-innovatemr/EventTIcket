@@ -12,16 +12,26 @@ import { EventService } from '../../services/event.service';
   styleUrl: './admin.component.css'
 })
 export class AdminComponent {
+ 
   flag: boolean = false;
   tasks: any; 
   user: any;
   currentUserId: any;
   showTasks: boolean = false;
   views: any;
+  name:any;
+  events:any;
+  approved:any;
+  rejected:any;
+  pending:any;
+  showRequests:boolean = false;
+  noeventmessage: any;
 
   constructor(private authService: AuthService, private eventService:EventService,private router: Router) {}
 
-
+  ngOnInit():void{
+    this.User_View();
+  }
 
   adminregister(): void {
     this.router.navigate(['/admin-register']);
@@ -80,5 +90,62 @@ deleteUser(userId: string): void {
       }
   }); 
 }
+
+User_View(): void {
+  console.log('111111111111111111111111111111111111111111111111111111111111');
+  this.eventService.generateTicket().subscribe({
+    next: (res: any) => {
+        this.events = res.pendingTickets;
+        this.name = res.names;
+        console.log('x',res.pendingTickets)
+    },
+    error: (err) => {
+      console.error('Error fetching events:', err);
+    }
+  });
+}
+
+AcceptBooking(Ticket_id: string): void {
+  if (!Ticket_id) {
+    console.log('No Ticket ID provided for approval');
+    return;
+  }
+
+  console.log('Approving ticket with ID:', Ticket_id);
+  this.eventService.Approve_Booking(Ticket_id).subscribe({
+    next: (res: any) => {
+      this.User_View()
+    },
+    error: (error: any) => {
+      console.error('Approval Failed:', error);
+    }
+  });
+}
+
+RejectBooking(Ticket_id: string): void {
+  if (!Ticket_id) {
+    console.log('No Ticket ID provided for rejection');
+    return;
+  }
+
+  console.log('Rejecting ticket with ID:', Ticket_id);
+
+  this.eventService.Reject_Booking(Ticket_id).subscribe({
+    next: (res: any) => {
+    this.User_View()
+    },
+    error: (error: any) => {
+      console.error('Rejection Failed:', error);
+    }
+  });
+}
+
+toggleRequests(): void {
+  this.flag = !this.flag;
+}
+
+
+
+
 
 }

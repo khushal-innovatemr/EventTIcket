@@ -83,5 +83,54 @@
                         </table>
                       </div>
                     </div>
+                    <div class='flex justify-between p-4 bg-pink  -100 rounded-lg shadow-md mb-2'>
+                    </div>
                   </div>
-  </div>
+          
+                  <div class="max-w-6xl mx-auto">
+                    <div class="flex flex-col my-3 p-6 rounded-xl bg-white shadow-xl hover:shadow-2xl transition-all duration-300">
+                        <button (click)="toggleRequests()"
+                            class="bg-green-500 hover:bg-green-600 active:bg-green-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path
+                                    d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                            </svg>
+                            {{flag ? 'Hide Requests':'Show Requests'}}
+                        </button>
+                        @if(flag){
+
+                          <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white shadow-lg rounded-xl overflow-hidden">
+                              <thead class="bg-gray-100">
+                                <tr>
+                                  <th class="py-3 px-6 text-left text-gray-600 font-semibold">User Name</th>
+                                  <th class="py-3 px-6 text-left text-gray-600 font-semibold">Event Name</th>
+                                  <th class="py-3 px-6 text-left text-gray-600 font-semibold">Tickets Requested</th>
+                                  <th class="py-3 px-6 text-left text-gray-600 font-semibold">Action</th> 
+                                </tr>
+                              </thead>
+                              <tbody>
+                                @for (ticket of events; track ticket.Ticket_id){
+        
+                                  <tr class="hover:bg-blue-50 transition duration-200 border-b border-gray-100">
+                                    <td class="py-4 px-6 text-gray-700">{{ ticket.user_name }}</td>
+                                    <td class="py-4 px-6">
+                                      {{ ticket.Event_name }}
+                                    </td>
+                                    <td>
+                                      {{ticket.Tickets}}
+                                    </td>
+                                    <td>
+                                        <button (click)="AcceptBooking(ticket.Ticket_id)" class="bg-green-500 hover:bg-green-600 p-2 rounded-md text-white">Approve</button>
+                                        <button (click)="RejectBooking(ticket.Ticket_id)" class="bg-red-500 hover:bg-red-600 p-2 rounded-md text-white ml-2">Reject</button>
+                                      </td>
+                                    </tr>
+                                  } 
+                                </tbody>
+                              </table>
+                            </div>
+                          }
+                          </div>
+                         
+                          </div>        
+                        </div>

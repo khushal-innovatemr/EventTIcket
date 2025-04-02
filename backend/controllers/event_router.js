@@ -82,7 +82,7 @@ router.post('/book/:id', verify, async (req, res) => {
         const Booking_id = req.user.userId;
         const ticket_id = uuidv4();
         const evId = req.params.id; 
-    
+        const user_name = req.user.name;
         
         const event = await Event.findOne({ Event_id: evId });
         if (!event) {
@@ -101,21 +101,56 @@ router.post('/book/:id', verify, async (req, res) => {
             return res.status(400).json({message:"No more tickets can be booked",Tickets_Exceeded_by:Ticket-5});
         }
         const existingBooking = await Booking.findOne({ Booking_id:Booking_id, Event_id: evId });
-        // if (existingBooking) {
-        //     return res.status(400).json({ message: "You have already booked the ticket" });
-        // }
-
         const date = Date.now();
-        const newBooking = new Booking({ Booking_id,org:mb, Event_id: evId,Event_Date:mc,Event_name:ab, date ,Ticket,Ticket_id:ticket_id});
+        const newBooking = new Booking({user_name:user_name, Booking_id,org:mb, Event_id: evId,Event_Date:mc,Event_name:ab, date ,Ticket,Ticket_id:ticket_id,status:'pending'});
         
-        event.avail_ticket -= Ticket;
-        const updateResult = await Event.updateOne({ Event_id: evId }, { avail_ticket: event.avail_ticket });
-
         await newBooking.save();
-        res.status(200).json({ message: "Booking successful" });
+        res.status(200).json({ message: "Booking Requested sent for approval" });
     } catch (err) {
         console.error("Unable to book tickets", err);
         return res.status(500).json({ error: "Server Error" });
+    }
+});
+
+router.post('/approval/:Ticket_id',async(req,res) => {
+    try{
+        const Ticket_id = req.params.Ticket_id;
+        const booking = await Booking.findOne({ Ticket_id:Ticket_id });
+
+        if (!booking) return res.status(404).json({ message: "Booking not found" });
+
+        const event = await Event.findOne({ Event_id: booking.Event_id });
+        if (!event) return res.status(404).json({ message: "Event not found" });
+
+        if (event.avail_ticket < booking.Ticket) {
+            return res.status(400).json({ message: "Not enough tickets available" });
+        }
+
+        booking.status = "approved";
+        await booking.save();
+
+        event.avail_ticket -= booking.Ticket;
+        await event.save();
+
+        res.json({ message: "Booking approved", booking });
+    } catch (error) {
+        res.status(500).json({ message: "Error approving booking", error });
+    }
+});
+
+router.post("/reject/:Ticket_id", async (req, res) => {
+    try {
+        const { Ticket_id } = req.params;
+        const booking = await Booking.findOne({ Ticket_id:Ticket_id });
+
+        if (!booking) return res.status(404).json({ message: "Booking not found" });
+
+        booking.status = "rejected";
+        await booking.save();
+
+        res.json({ message: "Booking rejected", booking });
+    } catch (error) {
+        res.status(500).json({ message: "Error rejecting booking", error });
     }
 });
 
@@ -129,17 +164,13 @@ router.post('/cancel/:Ticket_id',async (req, res) => {
         if (!booking) {
             return res.status(400).json({ message: "Booking not found" });
         }
-
         const event = await Event.findOne({ Event_id: booking.Event_id });
         
         if (!event) {
             return res.status(400).json({ message: "Event not found" });
         }
-
         event.avail_ticket += booking.Ticket;
         await event.save();
-
-
 
         res.status(200).json({ message: "Booking cancelled successfully" });
     } catch (error) {
@@ -163,17 +194,34 @@ router.get('/views', verify, async (req, res) => {
     }
   });
 
-router.get('/ticket',verify,async(req,res) => {
-    const organizer = req.user.name;
-    const booking_id = req.user.userId;
-    
-    const generate_ticket = await Booking.find({Booking_id:booking_id})
-    console.log(generate_ticket);
-    if(!generate_ticket){
-        return res.status(200).json({message:'No Bookings Found for the user',name:name})
+router.get('/ticket', verify, async (req, res) => {
+    try {
+        const Users = req.user.name;
+        const booking_id = req.user.userId;
+        if(req.user.role === 'admin'){
+            const pending_ticket = await Booking.find({ status: 'pending'});
+            const bookingIds = pending_ticket.map(ticket => ticket.Booking_id);
+            
+            const users = await User.find({ userId: { $in: bookingIds } });
+            const userName = users.map(u=>u.name);
+            return res.json({ pendingTickets: pending_ticket, names: userName });
+        }
+        else{
+            const generate_ticket = await Booking.find({ Booking_id: booking_id });
+            if (!generate_ticket || generate_ticket.length === 0) {
+                return res.status(200).json({ message: 'No Bookings Found for the user', name: Users });
+            }
+            const approvedTickets = generate_ticket.filter(ticket => ticket.status === 'approved');
+            const pendingTickets = generate_ticket.filter(ticket => ticket.status === 'pending');
+            return res.json({ tickets: approvedTickets,pendingTickets:pendingTickets, name: Users });
+        }
+
+    } catch (error) {
+        console.error('Error fetching tickets:', error);
+        return res.status(500).json({ message: 'Server error' });
     }
-    return res.json({tickets:generate_ticket,name:organizer});
-})
+});
+
 
 
 router.get('/organizer', verify, async (req, res) => {

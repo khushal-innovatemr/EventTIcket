@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const BookingSchema = new mongoose.Schema({
+    user_name:{
+        type:String,
+        required:true
+    },
     Booking_id: {
         type: String,
         required: true
@@ -32,6 +36,9 @@ const BookingSchema = new mongoose.Schema({
     Ticket_id:{
         type:String,
         required:true,
+    },
+    status:{
+        type:String,enum:["pending","approved","rejected"],default:'pending'
     }
 })
 
