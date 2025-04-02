@@ -36,6 +36,7 @@ const BookingSchema = new mongoose.Schema({
     Ticket_id:{
         type:String,
         required:true,
+        // default:null,
     },
     status:{
         type:String,enum:["pending","approved","rejected"],default:'pending'
