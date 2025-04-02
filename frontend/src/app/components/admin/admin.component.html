@@ -51,7 +51,6 @@
                             <tr>
                                 <th class="py-3 px-6 text-left text-gray-600 font-semibold">Name</th>
                                 <th class="py-3 px-6 text-left text-gray-600 font-semibold">Role</th>
-                                <th class="py-3 px-6 text-left text-gray-600 font-semibold">Assigned By</th>
                                 <th class="py-3 px-6 text-left text-gray-600 font-semibold">Action</th> 
                             </tr>
                         </thead>
@@ -65,8 +64,6 @@
                                   class="px-3 py-1 rounded-full text-xs font-medium {{ task.role === 'organizer' ? 'bg-purple-100 text-red-800' : 'bg-blue-100 text-blue-800' }}">
                                   {{ task.role }}
                                 </span>
-                              </td>
-                              <td>
                               </td>
                               <td>
                                 <button (click)="deleteUser(task.userId)"  class="bg-red-500 hover:bg-red-600 active:bg-green-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
@@ -112,13 +109,13 @@
                               <tbody>
                                 @for (ticket of events; track ticket.Ticket_id){
         
-                                  <tr class="hover:bg-blue-50 transition duration-200 border-b border-gray-100">
+                                  <tr class="hover:bg-red-200 transition duration-200 border-b border-gray-100">
                                     <td class="py-4 px-6 text-gray-700">{{ ticket.user_name }}</td>
                                     <td class="py-4 px-6">
                                       {{ ticket.Event_name }}
                                     </td>
                                     <td>
-                                      {{ticket.Tickets}}
+                                      {{ticket.Ticket}}
                                     </td>
                                     <td>
                                         <button (click)="AcceptBooking(ticket.Ticket_id)" class="bg-green-500 hover:bg-green-600 p-2 rounded-md text-white">Approve</button>

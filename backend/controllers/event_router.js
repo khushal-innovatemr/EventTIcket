@@ -12,12 +12,48 @@ const Event = require('../models/EventSchema');
 const multer = require('multer');
 const verify = require('../middleware/auth');
 const Booking = require('../models/BookingSchema');
+const nodemailer = require('nodemailer');
 
 db;
 dotenv.config();
 
 app.use(express.json());
 app.use(bodyParser.json());
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    }
+  });
+  
+  transporter.verify((error, success) => {
+    if (error) {
+      console.log("SMTP Connection Error:", error);
+    } else {
+      console.log("SMTP Ready:", success);
+    }
+  })
+  
+  const sendWelcomeEmail = async (email, name,Event_id,Ticket,status) => {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Booking Status!',
+      text: `Hi,${name}
+      \n Your booking for Event ID: ${Event_id} with ${Ticket} tickets is ${status}.`,
+      html: `<p>Hi ${name},</p><p>Your booking for Event ID: ${Event_id} with ${Ticket} tickets is ${status}.</p>`,
+    };
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log('Welcome email sent to:', email);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  
+  }
+
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -128,8 +164,16 @@ router.post('/approval/:Ticket_id',async(req,res) => {
 
         booking.status = "approved";
         await booking.save();
-
         event.avail_ticket -= booking.Ticket;
+
+        const users = await User.findOne({ userId: booking.Booking_id });
+        const email = users.email;
+        const name = users.name;
+        const Event_id = booking.Event_id;
+        const Ticket = booking.Ticket;
+        const status = booking.status;
+
+        sendWelcomeEmail(email,name,Event_id,Ticket,status);
         await event.save();
 
         res.json({ message: "Booking approved", booking });
@@ -146,7 +190,16 @@ router.post("/reject/:Ticket_id", async (req, res) => {
         if (!booking) return res.status(404).json({ message: "Booking not found" });
 
         booking.status = "rejected";
+        const users = await User.findOne({ userId: booking.Booking_id });
+        const email = users.email;
+        const name = users.name;
+        const Event_id = booking.Event_id;
+        const Ticket = booking.Ticket;
+        const status = booking.status;
+
+        sendWelcomeEmail(email,name,Event_id,Ticket,status);
         await booking.save();
+        await Booking.findOneAndDelete({status:'rejected'});
 
         res.json({ message: "Booking rejected", booking });
     } catch (error) {
