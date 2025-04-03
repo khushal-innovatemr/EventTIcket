@@ -4,9 +4,9 @@
     {{ noeventmessage }}
   </div>
   <div *ngIf="events.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div *ngFor="let event of events" class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+    <div *ngFor="let event of events; let i =index" class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
       <div class="p-6">
-        <h5 class="text-xl font-bold text-blue-600">Event name: {{ event.name }}</h5>
+        <h5 class="text-xl font-bold text-blue-600">{{i+1}}.Event name: {{ event.name }}</h5>
         <div class="text-gray-600"><strong>Organized By:</strong> {{ event.org }}</div>
         <div class="text-gray-600"><strong>Event ID:</strong> {{ event.Event_id }}</div>
         <div class="text-gray-600 my-2"><strong>Event Description: </strong>{{ event.description }}</div>

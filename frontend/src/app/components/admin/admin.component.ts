@@ -142,6 +142,7 @@ RejectBooking(Ticket_id: string): void {
 
 toggleRequests(): void {
   this.flag = !this.flag;
+  this.User_View()
 }
 
 
