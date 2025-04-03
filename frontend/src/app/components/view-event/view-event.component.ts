@@ -79,7 +79,7 @@ export class ViewEventComponent implements OnInit {
               this.noeventmessage = res.message;
             } else {
               this.events = res.data;
-              console.log(res);
+              console.log('##################################',res);
               this.router.navigate(['/booking']);
             }}
           })
