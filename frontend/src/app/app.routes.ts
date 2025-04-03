@@ -16,6 +16,7 @@ import { OrganizerComponent } from './components/organizer/organizer.component';
 import { OrganizerGuard } from './organizer.guard';
 import { UserGuard } from './user.guard';
 import { EventOrganizerComponent } from './components/event-organizer/event-organizer.component';
+import { BookingComponent } from './components/booking/booking.component';
 
 export const routes: Routes = [
     {
@@ -72,6 +73,10 @@ export const routes: Routes = [
         path:'manager',
         component:EventOrganizerComponent,
         canActivate:[UserGuard]
+    },
+    {
+        path:'booking',
+        component:BookingComponent
     }
    
 ];

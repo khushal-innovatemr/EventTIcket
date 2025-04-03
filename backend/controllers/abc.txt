@@ -1,0 +1,23 @@
+1.Create a backend endpoint: Set up a Node.js or other server-side endpoint to handle payment processing.
+
+2.Install Stripe Node.js library: Install the Stripe Node.js library: npm install stripe.
+
+3.Create Payment Intents: Use the Stripe API to create Payment Intents on your server-side.
+
+4.Send Payment Details: Send the payment details (e.g., card token, amount, currency) from your Angular frontend to your backend endpoint.
+
+5.Process the Payment: On the backend, use the Stripe API to process the payment and confirm the transaction.
+
+6.Return Results: Send a response to the frontend indicating the payment status (success or failure). 
+
+
+
+
+
+
+
+can you explain how can i connect stripe for developers i am using in my project with angular in ts and html such that in node i already have impelemneted payment intent and if payment intent is found we get the booking as savrf
+help me in havin a good html angular page and aplying the stripe for dvelopment for my event ticket booking system
+
+
+

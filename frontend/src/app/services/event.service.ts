@@ -70,6 +70,14 @@ export class EventService {
     return this.http.post<any>(`${this.API_URL}/reject/${Ticket_id}`,{headers:this.getHeaders(),withCredentials:true})
   }
 
+  createPaymentIntent(Event_Id: string, ticketCount: number): Observable<any> {
+    return this.http.post(`${this.API_URL}/${Event_Id}/events/payment-intent`, { Ticket: ticketCount },{headers:this.getHeaders(),withCredentials:true});
+  }
 
+  confirmBooking(Event_Id: string, paymentIntentId: string): Observable<any> {
+    return this.http.post(`${this.API_URL}/${Event_Id}/events`, { paymentIntentId },{
+      headers:this.getHeaders(),withCredentials:true
+    });
+  }
 }
 

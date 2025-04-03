@@ -13,6 +13,7 @@ const multer = require('multer');
 const verify = require('../middleware/auth');
 const Booking = require('../models/BookingSchema');
 const nodemailer = require('nodemailer');
+const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 
 db;
 dotenv.config();
@@ -314,6 +315,91 @@ router.delete("/delete/:id", async (req, res) => {
         return res.json({ error: "Internal Server Error" });
     }
 });
+
+router.post("/:Event_Id/events/payment-intent", verify, async (req, res) => {
+    const { Ticket } = req.body;
+    const { Event_Id } = req.params;
+
+    try {
+        const event = await Event.findOne({ Event_id: Event_Id });
+        if (!event) {
+            return res.status(400).json({ message: "Event Not Found" });
+        }
+
+        const total_cost = event.ticket_price * Ticket *100;
+        console.log(total_cost);
+
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: total_cost,
+            currency: "inr",
+            metadata: {
+                Event_id: Event_Id,
+                userId: req.user.userId,
+                Event_name: event.name,
+            },
+        });
+
+        if (!paymentIntent.client_secret) {
+            return res.status(500).json({ message: "error creating payment intent" });
+        }
+
+        const response = {
+            paymentIntentId: paymentIntent.id,
+            client_secret: paymentIntent.client_secret.toString(),
+            total_cost,
+        };
+        return res.json({data:response,details:event,paymentIntent:paymentIntent.metadata});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "something went wrong" });
+    }
+});
+
+router.post('/:Event_Id/events', verify, async (req, res) => {
+    try {
+        const { paymentIntentId, Ticket } = req.body;
+        const Event_id = req.params.Event_Id;
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+        if (!paymentIntent) {
+            return res.status(400).json({ message: "payment intent not found" });
+        }
+
+        if (paymentIntent.metadata.Event_id !== req.params.Event_Id ||
+            paymentIntent.metadata.userId !== req.user.userId) {
+            return res.status(400).json({ message: "payment intent mismatch" });
+        }
+
+        if (paymentIntent.status !== 'succeeded') {
+            return res.status(400).json({ message: `payment intent not succeeded. Status: ${paymentIntent.status}` });
+        }
+
+        const ticket_id = uuidv4();
+        const event = await Event.findOne({ Event_id: Event_id });
+        const organizer = await User.findOne({ userId: event.organizer_id });
+
+        const newBooking = new Booking({
+            ...req.body,
+            Ticket_id: ticket_id,
+            Ticket:Ticket,
+            Booking_id: req.user.userId,
+            org: organizer.name,
+            Event_name: event.name,
+            Event_id: req.params.Event_Id,
+            user_name: req.user.name,
+            status: 'approved',
+        });
+
+        await newBooking.save();
+
+        res.status(200).json({ message: "Booking successful" });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "something went wrong" });
+    }
+});
+
 
 
 module.exports = router;

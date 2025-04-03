@@ -1,0 +1,65 @@
+<div class="grid grid-cols-2 gap-6">
+    <label class="text-gray-700 text-sm font-bold flex-1">
+      Name
+      <input
+        class="mt-1 border rounded w-full py-2 px-3 text-gray-700 bg-gray-200 font-normal"
+        type="text"
+        (change)="ConfirmBooking(Event_Id,paymentIntentId)" 
+        readOnly
+        disabled
+      />
+      
+    </label>
+    <label class="text-gray-700 text-sm font-bold flex-1">
+      Email
+      <input
+        class="mt-1 border rounded w-full py-2 px-3 text-gray-700 bg-gray-200 font-normal"
+        type="text"
+        [value]="bm?.email"
+        readOnly
+        disabled
+      />
+    </label>
+    <label class="text-gray-700 text-sm font-bold flex-1">
+      Role
+      <input
+        class="mt-1 border rounded w-full py-2 px-3 text-gray-700 bg-gray-200 font-normal"
+        type="text"
+        [value]="bm?.role"
+        readOnly
+        disabled
+      />
+    </label>
+    <label class="text-gray-700 text-sm font-bold flex-1">
+      Tickets To Book
+      <input
+        class="mt-1 border rounded w-full py-2 px-3 text-gray-700 bg-gray-200 font-normal"
+        type="text"
+        [value]="bm?.ticketsToBook"
+        readOnly
+        disabled
+      />
+    </label>
+  </div>
+  <div class="space-y-2">
+    <h2 class="text-xl font-semibold">Your Price Summary</h2>
+    <div class="bg-blue-200 p-4 rounded-md">
+      <div class="font-semibold text-lg">
+        Total Cost: Rs{{am?.data.total_cost}}
+      </div>
+      <div class="text-xs">Include Taxes and Charges</div>
+    </div>
+  </div>
+  
+  <div class="space-y-2">
+    <h3 class="text-xl font-semibold">Payment Details</h3>
+  </div>
+  <div class="flex justify-end">
+    <button
+      type="submit"
+      class="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-md : disabled:bg-gray-500"
+    >
+      Submit Booking
+    </button>
+    <button (click)="CurrentBooking(Event_Id,Ticket)">Confirm</button>
+  </div>
