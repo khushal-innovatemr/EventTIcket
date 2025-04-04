@@ -67,24 +67,17 @@ export class ViewEventComponent implements OnInit {
   //   }
   // }
 
-  CurrentBooking(Event_Id: string,Ticket: number):void{
+  CurrentBooking(Event_Id: string):void{
     for(let event of this.events){
       console.log('a');
       if (Event_Id === event.Event_id) {
-        this.eventService.createPaymentIntent(Event_Id,event.Ticket).subscribe({
-          next:(res:any)=>{
-            if (res.message) {
-              console.log('No Events message:', res.message);
-              this.events = [];
-              this.noeventmessage = res.message;
-            } else {
-              this.events = res.data;
-              console.log('##################################',res);
-              this.router.navigate(['/booking']);
-            }}
-          })
-        }
+        console.log('#####################',Event_Id);
+        console.log('$$$$$$$$$$$$$$$$$$$',event.Ticket);
+        
+        this.router.navigate(['/booking', Event_Id, event.Ticket]);
+
     }
+  }
   }
 
 

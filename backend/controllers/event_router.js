@@ -347,8 +347,15 @@ router.post("/:Event_Id/events/payment-intent", verify, async (req, res) => {
             paymentIntentId: paymentIntent.id,
             client_secret: paymentIntent.client_secret.toString(),
             total_cost,
+            Event_id: Event_Id,
+            Event_date:event.Event_date,
+            userId: req.user.userId,
+            Event_name: event.name,
+            email:req.user.email,
+            name:req.user.name,
+            venue:event.venue
         };
-        return res.json({data:response,details:event,paymentIntent:paymentIntent.metadata});
+        return res.json({data:response});
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "something went wrong" });
@@ -358,6 +365,8 @@ router.post("/:Event_Id/events/payment-intent", verify, async (req, res) => {
 router.post('/:Event_Id/events', verify, async (req, res) => {
     try {
         const { paymentIntentId, Ticket } = req.body;
+        console.log('11111111111111111111111111111111111111111',req.body);
+        
         const Event_id = req.params.Event_Id;
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
@@ -381,15 +390,18 @@ router.post('/:Event_Id/events', verify, async (req, res) => {
         const newBooking = new Booking({
             ...req.body,
             Ticket_id: ticket_id,
-            Ticket:Ticket,
+            Ticket:Ticket,   
             Booking_id: req.user.userId,
             org: organizer.name,
+            Event_Date:event.Event_date,
             Event_name: event.name,
             Event_id: req.params.Event_Id,
             user_name: req.user.name,
             status: 'approved',
         });
 
+        event.avail_ticket -= Ticket
+        await Event.findOneAndUpdate({avail_ticket:event.avail_ticket})
         await newBooking.save();
 
         res.status(200).json({ message: "Booking successful" });

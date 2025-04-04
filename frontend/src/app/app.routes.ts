@@ -75,7 +75,7 @@ export const routes: Routes = [
         canActivate:[UserGuard]
     },
     {
-        path:'booking',
+        path:'booking/:id/:ticket',
         component:BookingComponent
     }
    

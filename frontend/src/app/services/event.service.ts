@@ -74,8 +74,8 @@ export class EventService {
     return this.http.post(`${this.API_URL}/${Event_Id}/events/payment-intent`, { Ticket: ticketCount },{headers:this.getHeaders(),withCredentials:true});
   }
 
-  confirmBooking(Event_Id: string, paymentIntentId: string): Observable<any> {
-    return this.http.post(`${this.API_URL}/${Event_Id}/events`, { paymentIntentId },{
+  confirmBooking(Event_Id: string, paymentIntentId: string,Ticket:any): Observable<any> {
+    return this.http.post(`${this.API_URL}/${Event_Id}/events`, { paymentIntentId,Ticket },{
       headers:this.getHeaders(),withCredentials:true
     });
   }

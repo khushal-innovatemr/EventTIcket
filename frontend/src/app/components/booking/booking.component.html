@@ -1,62 +1,89 @@
-<div class="grid grid-cols-2 gap-6" >
-    <label class="text-gray-700 text-sm font-bold flex-1">
-        Name
-      <input
-        class="mt-1 border rounded w-full py-2 px-3 text-gray-700 bg-gray-200 font-normal"
-        type="text"
-        readOnly
-        disabled
-      />
-      
+<div *ngIf="successmessage" class="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg animate-bounce">
+  {{ successmessage }}
+</div>
+
+<div class = "bg-white shadow-lg rounded-lg p-4 max-w-3xl mx-auto mb-6 absolute left-2">
+  <h3 class = "text-2xl font-bold text-gray-800 mb-4">Your Booking Details</h3>
+  <div class="grid grid-cols-2 gap-6 mb-6">
+    <label class="text-gray-700 text-xl">
+    Location: <strong>{{events.venue}}</strong>
+    <br>
+    <hr>
+  </label>
+  <label class="text-gray-700 text-xl">
+    Event Name: <strong>{{events.Event_name}}</strong>
+    <br>
+    <hr>
+  </label>
+    <label class="text-gray-700 text-xl">
+      Event Date: <strong>{{ formatDate(events.Event_date)}}</strong>
+      <br>
+      <hr>
     </label>
-    <label class="text-gray-700 text-sm font-bold flex-1">
-      Email
-      <input
-        class="mt-1 border rounded w-full py-2 px-3 text-gray-700 bg-gray-200 font-normal"
-        type="text"
-        [value]="bm?.email"
-        readOnly
-        disabled
-      />
+    <label class="text-gray-700 text-xl">
+      Booking Date: <strong>{{formatDate(booking_date)}}</strong>
+      <br>
+      <hr>
     </label>
-    <label class="text-gray-700 text-sm font-bold flex-1">
-      Role
-      <input
-        class="mt-1 border rounded w-full py-2 px-3 text-gray-700 bg-gray-200 font-normal"
-        type="text"
-        [value]="bm?.role"
-        readOnly
-        disabled
-      />
+    <label class="text-gray-700 text-xl">
+      Tickets Purchased: <strong>{{tic}}</strong>
+      <br>
+      <hr>
     </label>
-    <label class="text-gray-700 text-sm font-bold flex-1">
-      Tickets To Book
-      <input
-        class="mt-1 border rounded w-full py-2 px-3 text-gray-700 bg-gray-200 font-normal"
-        type="text"
-        readOnly
-        disabled
-      />
-    </label>
-  </div>
-  <div class="space-y-2">
-    <h2 class="text-xl font-semibold">Your Price Summary</h2>
-    <div class="bg-blue-200 p-4 rounded-md">
-      <div class="font-semibold text-lg">
-        Total Cost: Rs{{am?.data.total_cost}}
-      </div>
-      <div class="text-xs">Include Taxes and Charges</div>
+    <br>
+    <br>
     </div>
+</div>
+
+
+<div class="bg-white shadow-lg rounded-lg p-6 max-w-3xl mx-auto">
+  <h3 class="text-2xl font-bold text-gray-800 mb-4">Confirm Your Details</h3>
+
+  <div class="grid grid-cols-2 gap-6 mb-6">
+    <label class="text-gray-700 text-xl font-semibold">
+      First Name
+      <input class="mt-1 border border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 bg-gray-200" type="text" [value]="events?.name" readonly disabled />
+    </label>
+    
+    <label class="text-gray-700 text-xl font-semibold">
+      Email
+      <input class="mt-1 border border-gray-300 text-lg rounded-lg w-full py-2 px-3 text-black-700 bg-gray-200" type="text" [value]="events?.email" readonly disabled />
+    </label>
+
+    <label class="text-gray-700 text-xl font-semibold">
+      Event Id:
+      <input class="mt-1 border border-gray-300 text-lg rounded-lg w-full py-2 px-3 text-black-700 bg-gray-200" type="text" [value]="events?.Event_id" readonly disabled />
+    </label>
+
+    <label class="text-gray-700 text-xl font-semibold">
+      Booking Id:
+      <input class="mt-1 border border-gray-300 text-lg rounded-lg w-full py-2 px-3 text-black-700 bg-gray-200" type="text" [value]="events?.userId" readonly disabled />
+    </label>
+   
+
   </div>
-  
-  <div class="space-y-2">
-    <h3 class="text-xl font-semibold">Payment Details</h3>
+
+  <div class="bg-blue-100 p-4 rounded-lg shadow-md mb-6">
+    <h2 class="text-xl font-semibold text-gray-900">Your Price Summary</h2>
+    <div class="text-lg font-bold text-blue-700 mt-1">
+      Total Cost: ₹{{ events?.total_cost / 100 }}
+    </div>
+    <div class="text-xs text-gray-600">Includes Taxes and Charges</div>
   </div>
-  <div class="flex justify-end">
+
+  <h3 class="text-xl font-semibold text-gray-800 mb-3">Payment Details</h3>
+  <div class="border p-4 rounded-lg bg-gray-50 shadow-sm">
+    <div id="card-element" class="mb-4 border border-gray-300 p-3 rounded-lg bg-white shadow-sm"></div>
+    <div id="card-errors" role="alert" class="text-red-600 text-sm">{{cardErrors}}</div>
+  </div>
+
+  <div class="flex justify-end mt-6">
     <button
+      (click)="ConfirmBooking()"
       type="submit"
-      class="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-md : disabled:bg-gray-500"
+      class="bg-blue-600 text-white py-2 px-6 font-bold rounded-lg shadow-md hover:bg-blue-500 transition-all duration-200 disabled:bg-gray-400"
     >
-      Submit Booking
+      Confirm Booking
     </button>
   </div>
+</div>
