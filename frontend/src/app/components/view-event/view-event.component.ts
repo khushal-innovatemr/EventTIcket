@@ -90,4 +90,8 @@ export class ViewEventComponent implements OnInit {
     });
   }
 
+  view_Events(){
+    this.router.navigate(['/user-view'])
+  }
+
 }

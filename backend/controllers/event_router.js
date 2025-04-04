@@ -113,41 +113,41 @@ router.get('/admin-view',verify, async (req, res) => {
     }
 });
 
-router.post('/book/:id', verify, async (req, res) => {
-    try {
-        const {Ticket} = req.body;
-        const Booking_id = req.user.userId;
-        const ticket_id = uuidv4();
-        const evId = req.params.id; 
-        const user_name = req.user.name;
+// router.post('/book/:id', verify, async (req, res) => {
+//     try {
+//         const {Ticket} = req.body;
+//         const Booking_id = req.user.userId;
+//         const ticket_id = uuidv4();
+//         const evId = req.params.id; 
+//         const user_name = req.user.name;
         
-        const event = await Event.findOne({ Event_id: evId });
-        if (!event) {
-            return res.status(404).json({ message: "Event not found" });
-        }
-        const ab = event.name;
-        const mb = event.org;
-        const mc = event.Event_date;
+//         const event = await Event.findOne({ Event_id: evId });
+//         if (!event) {
+//             return res.status(404).json({ message: "Event not found" });
+//         }
+//         const ab = event.name;
+//         const mb = event.org;
+//         const mc = event.Event_date;
         
-        if (event.avail_ticket <= 0) {
-            return res.status(400).json({ message: "No tickets available" });
-        }
+//         if (event.avail_ticket <= 0) {
+//             return res.status(400).json({ message: "No tickets available" });
+//         }
 
-        if (Ticket>5){
-            console.log("max tickets exceeded by",Ticket-5)
-            return res.status(400).json({message:"No more tickets can be booked",Tickets_Exceeded_by:Ticket-5});
-        }
-        const existingBooking = await Booking.findOne({ Booking_id:Booking_id, Event_id: evId });
-        const date = Date.now();
-        const newBooking = new Booking({user_name:user_name, Booking_id,org:mb, Event_id: evId,Event_Date:mc,Event_name:ab, date ,Ticket,Ticket_id:ticket_id,status:'pending'});
+//         if (Ticket>5){
+//             console.log("max tickets exceeded by",Ticket-5)
+//             return res.status(400).json({message:"No more tickets can be booked",Tickets_Exceeded_by:Ticket-5});
+//         }
+//         const existingBooking = await Booking.findOne({ Booking_id:Booking_id, Event_id: evId });
+//         const date = Date.now();
+//         const newBooking = new Booking({user_name:user_name, Booking_id,org:mb, Event_id: evId,Event_Date:mc,Event_name:ab, date ,Ticket,Ticket_id:ticket_id,status:'pending'});
         
-        await newBooking.save();
-        res.status(200).json({ message: "Booking Requested sent for approval" });
-    } catch (err) {
-        console.error("Unable to book tickets", err);
-        return res.status(500).json({ error: "Server Error" });
-    }
-});
+//         await newBooking.save();
+//         res.status(200).json({ message: "Booking Requested sent for approval" });
+//     } catch (err) {
+//         console.error("Unable to book tickets", err);
+//         return res.status(500).json({ error: "Server Error" });
+//     }
+// });
 
 router.post('/approval/:Ticket_id',async(req,res) => {
     try{

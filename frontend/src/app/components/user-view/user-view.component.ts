@@ -78,4 +78,8 @@ export class UserViewComponent {
     });
   }
 
+  viewEvents():void{
+    this.router.navigate(['/view'])
+  }
+
 }
