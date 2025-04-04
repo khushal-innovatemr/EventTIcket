@@ -401,7 +401,8 @@ router.post('/:Event_Id/events', verify, async (req, res) => {
         });
 
         event.avail_ticket -= Ticket
-        await Event.findOneAndUpdate({avail_ticket:event.avail_ticket})
+        console.log(event.avail_ticket);
+        await Event.findOneAndUpdate({Event_id:Event_id,avail_ticket:event.avail_ticket})
         await newBooking.save();
 
         res.status(200).json({ message: "Booking successful" });
