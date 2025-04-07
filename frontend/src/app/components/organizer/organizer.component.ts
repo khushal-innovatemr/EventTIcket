@@ -19,6 +19,8 @@ export class OrganizerComponent {
   currentEventId: any;
   showTasks: boolean = false;
   views: any;
+  name:any;
+
 
 constructor(private eventService: EventService, private router: Router) { }
 
@@ -37,6 +39,7 @@ OrganizerView():void{
         this.events = res;
         this.filtered_events = [...this.events]
         console.log(res);
+        this.name = res.name;
 
         this.events.forEach((v: any) => {
           // console.log('Event ID:', v.Event_id);

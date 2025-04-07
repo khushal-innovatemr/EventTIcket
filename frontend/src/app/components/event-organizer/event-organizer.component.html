@@ -1,6 +1,10 @@
+<div class="fixed top-16 right-4 font-semibold max-w-sm bg-orange-100 text-center p-3 rounded-lg mt-5 shadow-lg border border-orange-200 transform transition-all duration-300 hover:bg-orange-200 z-40">
+<span class="flex items-center">
+  Welcome, {{ name | titlecase }}
+</span>
+</div>
 <div class="px-4 py-8 mt-10">
   <div class="flex flex-col md:flex-row items-center justify-between mb-9 w-full">
-
     <button (click)="CreateEvent()" class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 p-3 px-6 rounded-full text-white font-semibold shadow-lg">
       Create Event
     </button>

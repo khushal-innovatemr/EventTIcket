@@ -43,6 +43,7 @@ See(): void {
           } else {
               this.events = res.events;
               this.name = res.name;
+              console.log(this.name);
              
           }
       },

@@ -16,8 +16,15 @@ eve:any;
 showEvents: boolean = false;
 createEvents:boolean = false;
 viewsEvents:boolean = false;
+name:any;
+  events: any;
+  filtered_events: any;
 
 constructor(private eventService: EventService, private router: Router) { }
+
+ngOnInit(){
+  this.See();
+}
 
 CreateEvent():void{
   this.router.navigate(['/event'])
@@ -36,13 +43,39 @@ See(): void {
               this.noeventmessage = res.message;
           } else {
               console.log(res.events);
+              console.log(res);
               this.eve = res.events;
+              this.name = res.name;
              
           }
       },
       error: (err) => {
           console.error('Error fetching events:', err);
       }
+  });
+}
+
+OrganizerView():void{
+  this.eventService.organize_view().subscribe({
+    next: (res: any) => {
+      if (res.message) {
+        console.log('No Events message:', res.message);
+        this.events = [];
+        this.noeventmessage = res.message;
+      } else {
+        this.events = res;
+        this.filtered_events = [...this.events]
+        console.log(res);
+        this.name = res.name;
+
+        this.events.forEach((v: any) => {
+          // console.log('Event ID:', v.Event_id);
+        });
+      }
+    },
+    error: (err) => {
+      console.error('Error fetching events:', err);
+    }
   });
 }
 
