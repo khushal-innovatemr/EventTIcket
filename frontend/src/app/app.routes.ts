@@ -17,6 +17,8 @@ import { OrganizerGuard } from './organizer.guard';
 import { UserGuard } from './user.guard';
 import { EventOrganizerComponent } from './components/event-organizer/event-organizer.component';
 import { BookingComponent } from './components/booking/booking.component';
+import { TAComponent } from './components/t-a/t-a.component';
+import { AbcComponent } from './components/abc/abc.component';
 
 export const routes: Routes = [
     {
@@ -76,7 +78,20 @@ export const routes: Routes = [
     },
     {
         path:'booking/:id/:ticket',
-        component:BookingComponent
+        component:BookingComponent,
+        canActivate:[AdminGuard,OrganizerGuard]
+    },
+    {
+        path:'amount',
+        component:TAComponent,
+    },
+    {
+        path:'home',
+        component:AbcComponent
+    },
+    {
+        path:'**',
+        redirectTo:'home'
     }
    
 ];

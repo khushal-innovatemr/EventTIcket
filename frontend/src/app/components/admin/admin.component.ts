@@ -145,6 +145,9 @@ toggleRequests(): void {
   this.User_View()
 }
 
+AmountCollection():void{
+  this.router.navigate(['/amount']);
+}
 
 
 

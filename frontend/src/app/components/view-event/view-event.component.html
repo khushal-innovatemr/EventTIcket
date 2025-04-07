@@ -1,37 +1,84 @@
 <div class="container mx-auto">
   <h2 class="text-center my-4 text-2xl font-semibold">Events Coming Soon</h2>
-  <div *ngIf="noeventmessage" class="bg-blue-100 border border-blue-300 text-blue-700 p-4 rounded-lg mb-4 shadow-md">
+
+  <div
+    *ngIf="noeventmessage"
+    class="bg-blue-100 border border-blue-300 text-blue-700 p-4 rounded-lg mb-4 shadow-md"
+  >
     {{ noeventmessage }}
   </div>
+
+  <input
+    type="text"
+    [(ngModel)]="search_filter"
+    (input)="filter_events()"
+    placeholder="Search events..."
+    class="p-4 mb-6 rounded-md hover:scale-105 shadow-lg w-full"
+  />
+
   <div *ngIf="events.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div *ngFor="let event of events; let i =index" class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-      <div class="p-6">
-        <h5 class="text-xl font-bold text-blue-600">{{i+1}}.Event name: {{ event.name }}</h5>
+    @for (event of filtered_events; track event.Event_id) {
+      <div
+        class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 p-6 cursor-pointer"
+        (click)="openPopup(event)"
+      >
+        <h5 class="text-xl font-bold text-blue-600">
+         Event name: {{ event.name }}
+        </h5>
         <div class="text-gray-600"><strong>Organized By:</strong> {{ event.org }}</div>
-        <div class="text-gray-600"><strong>Event ID:</strong> {{ event.Event_id }}</div>
-        <div class="text-gray-600 my-2"><strong>Event Description: </strong>{{ event.description }}</div>
-        <div class="text-gray-600"><strong>Date:</strong> {{ formatDate(event.Event_date)}}</div>
+        <div class="text-gray-600"><strong>Date:</strong> {{ formatDate(event.Event_date) }}</div>
         <div class="text-gray-600"><strong>Venue:</strong> {{ event.venue }}</div>
-        <div class="text-gray-600"><strong>Ticket Price:</strong> {{ event.ticket_price }}</div>
-        <div class="text-gray-600"><strong>Type:</strong> {{ event.type }}</div>
-        <div class="text-gray-600"><strong>Available Tickets:</strong> {{ event.avail_ticket }}</div>
-        <div *ngIf="event.image_url" class="h-64 overflow-hidden">
-          <img [src]="event.image_url" alt="Event Image" class="w-full h-full object-cover">
+        <div *ngIf="event.image_url" class="h-64 overflow-hidden my-4">
+          <img [src]="event.image_url" alt="Event Image" class="w-full h-full object-cover" />
         </div>
-        <br>
-        
-        <div>
-          <label for="name" class="text-gray-600">How many Tickets?</label>
-          <input 
-            type="Number" 
-            [(ngModel)]="event.Ticket" 
-            name="Tickets" 
-            placeholder="No of Tickets" 
-            required 
-            class="p-3 rounded-md border border-gray-300 text-gray-600 outline-none transition" />
-          <button (click)="CurrentBooking(event.Event_id)" class="font-semibold shadow-blue text-blue-700">Book Event</button>
+      </div>
+    }
+  </div>
+
+  @if(selectedEvent) {
+    <div class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+      <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-2xl relative">
+        <span
+          (click)="closePopup()"
+          class="absolute top-4 right-4 text-red-500 text-3xl font-bold cursor-pointer"
+        >
+          &times;
+        </span>
+        <h3 class="text-center text-2xl font-bold text-blue-600 mb-4">
+          {{ selectedEvent.name }} - Details
+        </h3>
+        <hr class="mb-4" />
+        <p><strong>Organized By:</strong> {{ selectedEvent.org }}</p>
+        <p><strong>Event ID:</strong> {{ selectedEvent.Event_id }}</p>
+        <p><strong>Description:</strong> {{ selectedEvent.description }}</p>
+        <p><strong>Date:</strong> {{ formatDate(selectedEvent.Event_date) }}</p>
+        <p><strong>Venue:</strong> {{ selectedEvent.venue }}</p>
+        <p><strong>Ticket Price:</strong> {{ selectedEvent.ticket_price }}</p>
+        <p><strong>Type:</strong> {{ selectedEvent.type }}</p>
+        <p><strong>Available Tickets:</strong> {{ selectedEvent.avail_ticket }}</p>
+
+        <div *ngIf="selectedEvent.image_url" class="h-64 overflow-hidden my-4">
+          <img [src]="selectedEvent.image_url" alt="Event Image" class="w-full h-full object-cover" />
+        </div>
+
+        <div class="mt-4">
+          <label for="Tickets" class="text-gray-600">How many Tickets?</label>
+          <input
+            type="number"
+            [(ngModel)]="selectedEvent.Ticket"
+            name="Tickets"
+            placeholder="No of Tickets"
+            required
+            class="p-3 mt-1 mb-3 rounded-md border border-gray-300 text-gray-600 outline-none transition w-full"
+          />
+          <button
+            (click)="CurrentBooking(selectedEvent.Event_id)"
+            class="font-semibold text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 transition"
+          >
+            Book Event
+          </button>
         </div>
       </div>
     </div>
-  </div>
+  }
 </div>

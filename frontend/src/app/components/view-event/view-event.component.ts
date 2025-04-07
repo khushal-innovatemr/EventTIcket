@@ -15,10 +15,12 @@ export class ViewEventComponent implements OnInit {
   events: any = [];
   noeventmessage: string = '';
   noTaskMessage: any;
+  selectedEvent: any = null;
   books: any;
   errorMessage: any;
   Ticket: any;
   tickets: any;
+  showPopup: boolean = false;
 
   constructor(private eventService: EventService, private router: Router) { }
 
@@ -35,7 +37,7 @@ export class ViewEventComponent implements OnInit {
           this.noeventmessage = res.message;
         } else {
           this.events = res.events;
-
+          this.filtered_events = [...this.events]
           this.events.forEach((v: any) => {
             // console.log('Event ID:', v.Event_id);
           });
@@ -93,5 +95,30 @@ export class ViewEventComponent implements OnInit {
   view_Events(){
     this.router.navigate(['/user-view'])
   }
+
+  filtered_events = [...this.events];
+  search_filter = '';
+
+  filter_events(){
+    if(this.search_filter){
+      this.filtered_events = this.events.filter((event:any) => event.name.toLowerCase().includes(this.search_filter.toLowerCase()) ||
+      event.venue.toLowerCase().includes(this.search_filter.toLowerCase())||
+      event.type.toLowerCase().includes(this.search_filter.toLowerCase())
+    );
+  } 
+    else{
+      this.filtered_events = [...this.events];
+    }
+  }
+
+
+  openPopup(event: any) {
+    this.selectedEvent = event;
+  }
+
+  closePopup() {
+    this.selectedEvent = null;
+  }
+
 
 }

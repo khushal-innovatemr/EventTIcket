@@ -18,9 +18,10 @@
     <div *ngIf="noeventmessage" class="bg-blue-100 border border-blue-300 text-blue-700 p-4 rounded-lg mb-4 shadow-md">
       {{ noeventmessage }}
     </div>
-   
+    
+    <input type="text" [(ngModel)]="search_filter" (input)="filter_events()" placeholder="Search events..." class = 'p-4 mb-6 rounded-md hover:scale-105 shadow-lg'/>
     <div *ngIf="events?.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let event of events; let i =index" class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+      <div *ngFor="let event of filtered_events; let i =index" class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
         <div class="p-6">
             <h5 class="text-xl font-bold text-blue-600"><strong>{{i+1}}.Event Name: </strong>{{ event.name }}</h5>
             <h3 class="text-gray-600">Date of Event: {{ formatDate(event.Event_date) }}</h3>

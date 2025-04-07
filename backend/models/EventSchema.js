@@ -7,7 +7,7 @@ const EventSchema = new mongoose.Schema({
     Event_id:{type:String,required:true},
     organizer_id:{type:String,required:true}, 
     type:{type:String,enum:["Conferences","Seminar","Festive","TradeShow","Party","Club"]},
-    ticket_price:{type:String,required:true},   
+    ticket_price:{type:Number,required:true},   
     venue:{type:String,required:true},
     description:{type:String,required:true},
     image_url:{data: Buffer, contentType: String},
@@ -15,5 +15,5 @@ const EventSchema = new mongoose.Schema({
    
 })
 
-const Event = mongoose.model("Events",EventSchema);
+const Event = mongoose.model("Events",EventSchema); 
 module.exports = Event;

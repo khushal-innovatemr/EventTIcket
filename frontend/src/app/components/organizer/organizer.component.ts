@@ -2,16 +2,17 @@ import { Component } from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-organizer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './organizer.component.html',
   styleUrl: './organizer.component.css'
 })
 export class OrganizerComponent {
-events: any; 
+  events: any = [];
   noeventmessage: any;
   showEvents: any;
   eve: any;
@@ -34,6 +35,7 @@ OrganizerView():void{
         this.noeventmessage = res.message;
       } else {
         this.events = res;
+        this.filtered_events = [...this.events]
         console.log(res);
 
         this.events.forEach((v: any) => {
@@ -111,6 +113,20 @@ See(): void {
 EventsBooked(): void {
   this.showEvents = !this.showEvents; // Toggle visibility
     this.See();
+}
+
+filtered_events = [...this.events];
+search_filter = '';
+
+filter_events(){
+  if(this.search_filter){
+    this.filtered_events = this.events.filter( (event:any) => event.name.toLowerCase().includes(this.search_filter.toLowerCase()) ||
+    event.venue.toLowerCase().includes(this.search_filter.toLowerCase())
+  );
+}
+  else{
+    this.filtered_events = [...this.events];
+  }
 }
 }
 

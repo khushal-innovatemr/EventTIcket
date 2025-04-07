@@ -1,0 +1,12 @@
+<div *ngFor="let amt of amount; let i =index" class="bg-white rounded-xl shadow-lg transform hover:scale-105 transition duration-300 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="p-6">
+      <h5 class="text-2xl font-bold text-blue-600"><strong>{{i+1}}.Event Name: </strong>{{ amt.name }}</h5>
+      <h3 class="text-gray-700 text-lg"><strong>Organised By:</strong> {{ amt.org }}</h3>
+      <h3 class="text-gray-700 text-lg"><strong>Ticket Solds:</strong>{{ amt.Ticket}}</h3>
+      <h3 class="text-gray-700 text-lg"><strong>Ticket Price: </strong>{{amt.ticket_price}}</h3>
+      <h3 class="text-gray-700 text-lg"><strong>Total Amount Collected: </strong>{{amt.Total_Amount }}</h3>
+    <br>
+    <hr>
+
+    </div>
+</div>

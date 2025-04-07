@@ -2,82 +2,93 @@ Install Stripe
 
 npm install stripe
 
-create route for payment intent response
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-router.post('/create-payment-intent', verify, async (req, res) => {
-    try {
-        const { eventId, Ticket } = req.body;
-        const event = await Event.findOne({ Event_id: eventId });
-
-        if (!event) return res.status(404).json({ message: "Event not found" });
-
-        const amount = event.ticket_price * Ticket * 100; // Convert to cents
+1.create route for payment intent response
 
         const paymentIntent = await stripe.paymentIntents.create({
-            amount,
-            currency: 'usd',
-            metadata: { eventId, Ticket, userId: req.user.userId }
+            amount: total_cost,
+            currency: "inr",
+            metadata: {
+                Event_id: Event_Id,
+                userId: req.user.userId,
+                Event_name: event.name,
+            },
         });
 
-        res.json({ clientSecret: paymentIntent.client_secret });
-    } catch (error) {
-        console.error('Error creating payment intent:', error);
-        res.status(500).json({ message: 'Server error' });
+2.Now create a route if there exists a stripe payment Intent then only we proceed to save the booking         
+
+3.for the frontend first manage to get event id(either using url or save it to cookies/local storage and then proceed) and using stripe public key we loadStripe the card compoennet
+
+async CurrentBooking(Event_Id: string, Ticket: number): Promise<void> {
+    this.eventService.createPaymentIntent(Event_Id, Ticket).subscribe({
+      next: async (res: any) => {
+        this.Event_Id = Event_Id;
+        this.events = res.data;
+        this.tic = Ticket;
+        this.booking_date = Date.now()
+        this.paymentIntentId = res.data.paymentIntentId;
+        await this.setupStripeElements(res.data.client_secret);
+      },
+      error: (err) => {
+        console.error('Error creating payment intent:', err);
+      }
+    });
+  }
+
+  async setupStripeElements(clientSecret: string): Promise<void> {
+    if (!this.stripe) {
+      this.cardErrors = 'Stripe has not been initialized.';
+      return;
     }
-});
 
+    const elements = this.stripe.elements();
+    this.card = elements.create('card');
+    this.card.mount('#card-element');
 
-book.component.ts
-import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { loadStripe } from '@stripe/stripe-js';
+    this.card.on('change', (event: any) => {
+      this.cardErrors = event.error ? event.error.message : '';
+    });
+  }
 
-@Component({
-    selector: 'app-book',
-    templateUrl: './book.component.html',
-})
-export class BookComponent {
-    stripePromise = loadStripe('your-publishable-key');
+  async ConfirmBooking(): Promise<void> {
+    this.isLoading = true;
 
-    constructor(private http: HttpClient) {}
-
-    async bookTicket(eventId: string, Ticket: number) {
-        this.http.post<{ clientSecret: string }>('http://localhost:5000/create-payment-intent', { eventId, Ticket })
-            .subscribe(async (res) => {
-                const stripe = await this.stripePromise;
-                const { error } = await stripe!.redirectToCheckout({
-                    sessionId: res.clientSecret,
-                });
-                if (error) console.error(error);
-            });
+    if (!this.stripe || !this.card) {
+      this.cardErrors = 'Stripe or card information is not properly initialized.';
+      this.isLoading = false;
+      return;
     }
-}
-
-
-router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-    const sig = req.headers['stripe-signature'];
 
     try {
-        const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+      const result = await this.stripe.confirmCardPayment(this.events.client_secret, {
+        payment_method: { card: this.card }
+      });
 
-        if (event.type === 'payment_intent.succeeded') {
-            const { eventId, Ticket, userId } = event.data.object.metadata;
-
-            const booking = new Booking({
-                Booking_id: userId,
-                Event_id: eventId,
-                Ticket,
-                status: 'approved'
-            });
-
-            await booking.save();
-            console.log("Booking Confirmed!");
-        }
-        res.json({ received: true });
-    } catch (err) {
-        console.error("Webhook error:", err);
-        res.status(400).send(`Webhook Error: ${err.message}`);
+      if (result.error) {
+        this.cardErrors = result.error.message;
+      } else if (result.paymentIntent.status === 'succeeded') {
+        this.eventService.confirmBooking(this.Event_Id, this.paymentIntentId, this.pathValue[2]).subscribe({
+          next: (res: any) => {
+            this.successmessage = '✅ Payment Successful! Redirecting...';
+            setTimeout(() => {
+              this.successmessage = '';
+              this.router.navigate(['/user-view']);
+            }, 3000);
+          },
+          error: (err) => {
+            console.error('Error confirming booking:', err);
+          }
+        });
+      }
+    } catch (err: any) {
+      console.error('Error processing payment:', err);
+      this.cardErrors = 'Payment failed. Please try again.';
+    } finally {
+      this.isLoading = false;
     }
-});
-webhook.js
+  }
+
+4.  load the ts in the frontend
+<div class="border p-4 rounded-lg bg-gray-50 shadow-lg">
+    <div id="card-element" class="mb-2 border rounded-md p-2 text-sm StripeElement"></div>
+    <div id="card-errors" role="alert" class="text-yellow-600 text-xl">{{cardErrors}}</div>
+  </div>

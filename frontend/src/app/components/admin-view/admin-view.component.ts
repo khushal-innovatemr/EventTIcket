@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { EventService } from '../../services/event.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-view',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './admin-view.component.html',
   styleUrl: './admin-view.component.css'
 })
@@ -36,6 +37,7 @@ export class AdminViewComponent {
                 this.noeventmessage = res.message;
             } else {
                 this.events = res.events;
+                this.filtered_events = [...this.events]
 
                 this.events.forEach((v: any) => {
                   // console.log('Event ID:', v.Event_id);
@@ -79,6 +81,21 @@ formatDate(dateString: string): string {
     month: 'long',
     year: 'numeric',
   });
+}
+
+
+filtered_events = [...this.events];
+search_filter = '';
+
+filter_events(){
+  if(this.search_filter){
+    this.filtered_events = this.events.filter( (event:any) => event.name.toLowerCase().includes(this.search_filter.toLowerCase()) ||
+    event.venue.toLowerCase().includes(this.search_filter.toLowerCase())
+  );
+}
+  else{
+    this.filtered_events = [...this.events];
+  }
 }
 
 }

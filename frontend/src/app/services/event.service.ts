@@ -79,5 +79,9 @@ export class EventService {
       headers:this.getHeaders(),withCredentials:true
     });
   }
+
+  collectAmount():Observable<any>{
+    return this.http.get(`${this.API_URL}/amount_collect`);
+  }
 }
 

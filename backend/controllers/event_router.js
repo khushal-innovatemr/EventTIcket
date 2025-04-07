@@ -13,6 +13,8 @@ const multer = require('multer');
 const verify = require('../middleware/auth');
 const Booking = require('../models/BookingSchema');
 const nodemailer = require('nodemailer');
+const Calculation_Schema = require('../models/CalculationSchema');
+const Calculation = require('../models/CalculationSchema');
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 
 db;
@@ -85,7 +87,7 @@ router.get('/view-event',verify, async (req, res) => {
     try {
         const role = req.user.role;
         const name = req.user.name;
-        const ViewEvents = await Event.find({}, 'name org description Event_id Event_date ticket_price venue type avail_ticket image_url').sort({ type: 1 });
+        const ViewEvents = await Event.find({}, 'name org description Event_id Event_date ticket_price venue type avail_ticket image_url').sort({ Event_date: 1 });
         const eventsWithImageUrl = ViewEvents.map(event => ({
                 ...event._doc,
                 image_url: (event.image_url && event.image_url.data) ? `data:${event.image_url.contentType};base64,${event.image_url.data.toString('base64')}` : null
@@ -390,7 +392,7 @@ router.post('/:Event_Id/events', verify, async (req, res) => {
         const newBooking = new Booking({
             ...req.body,
             Ticket_id: ticket_id,
-            Ticket:Ticket,   
+            Ticket:Number(Ticket),   
             Booking_id: req.user.userId,
             org: organizer.name,
             Event_Date:event.Event_date,
@@ -400,10 +402,24 @@ router.post('/:Event_Id/events', verify, async (req, res) => {
             status: 'approved',
         });
 
+        const total_cost = Ticket *event.ticket_price;
+
+        const calculation = new Calculation({name:event.name,org:event.org,Ticket:Ticket,ticket_price:event.ticket_price,Total_Amount:total_cost });
+        const existingBooking = await Calculation.findOne({name:event.name,org:event.org,ticket_price:event.ticket_price});
+        
         event.avail_ticket -= Ticket
         console.log(event.avail_ticket);
-        await Event.findOneAndUpdate({Event_id:Event_id,avail_ticket:event.avail_ticket})
+        await Event.findOneAndUpdate({Event_id:Event_id},{avail_ticket:event.avail_ticket})
         await newBooking.save();
+        
+        if(existingBooking){
+            existingBooking.Ticket += Number(Ticket);
+            existingBooking.Total_Amount += total_cost;
+            await existingBooking.save()
+        }
+        else{
+            await calculation.save();
+        }
 
         res.status(200).json({ message: "Booking successful" });
 
@@ -414,5 +430,9 @@ router.post('/:Event_Id/events', verify, async (req, res) => {
 });
 
 
+router.get('/amount_collect',async(req,res) => {
+    const view_amount = await Calculation.find({},'name org Ticket ticket_price Total_Amount')
+    return res.json(view_amount);
+})
 
 module.exports = router;
