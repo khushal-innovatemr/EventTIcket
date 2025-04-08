@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { GoogleLoginProvider } from 'angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -37,19 +38,29 @@ export class LoginComponent {
           this.message = 'Redirecting to Admin Dashboard';
           this.router.navigate(['/admin']);
           return;
-        }
-        else if(res.role === 'organizer'){
+        } else if (res.role === 'organizer') {
           this.message = 'Redirecting to Organizer View';
           this.router.navigate(['/manager']);
           return;
         }
-          this.showRedirectMessage = true;
-          this.message = 'Redirecting to Dashboard...';
-          this.router.navigate(['/user']);
-          
+
+        this.showRedirectMessage = true;
+        this.message = 'Redirecting to Dashboard...';
+        this.router.navigate(['/user']);
       },
       error: (err) => {
         this.errorMessage = err.error.error;
+      }
+    });
+  }
+
+  public signInWithGoogle(): void {
+    this.authService.signInWithGoogle().subscribe(user => {
+      if (user) {
+        this.message = 'Google Sign-In Successful!';
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.errorMessage = 'Google Sign-In Failed!';
       }
     });
   }
