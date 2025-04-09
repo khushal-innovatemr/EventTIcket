@@ -3,7 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { GoogleLoginProvider } from 'angularx-social-login';
+const clientID = '1015469568453-jr3b9jqs2ca014ta6h8s0o24l34ocruf.apps.googleusercontent.com';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +21,9 @@ export class LoginComponent {
   errorMessage = '';
   showTokenMessage = false;
   showRedirectMessage = false;
+  clientId:any;
+  successMessage: any;
+  failureMessage: any;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -53,15 +56,19 @@ export class LoginComponent {
       }
     });
   }
+  
+ GoogleLogin(){
+  this.clientId = {clientID}
+  this.successMessage = this.onSuccess;
+  this.failureMessage = this.onFailure;
+ }
 
-  public signInWithGoogle(): void {
-    this.authService.signInWithGoogle().subscribe(user => {
-      if (user) {
-        this.message = 'Google Sign-In Successful!';
-        this.router.navigate(['/dashboard']);
-      } else {
-        this.errorMessage = 'Google Sign-In Failed!';
-      }
-    });
-  }
+ onSuccess = async(res:any) => {
+  console.log(res.profileObj);
+ }
+
+ onFailure = async(res:any) => {
+  console.log(res);
+ }
+
 }
