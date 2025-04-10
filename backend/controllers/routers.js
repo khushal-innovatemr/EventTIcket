@@ -108,7 +108,7 @@ router.delete('/user-delete/:id', verify, async (req, res) => {
 });
 
 router.post('/google', async (req, res) => {
-    const { credential } = req.body;
+    const { credential,role } = req.body;
 
     try {
         const ticket = await client.verifyIdToken({
@@ -118,6 +118,7 @@ router.post('/google', async (req, res) => {
 
         const payload = ticket.getPayload();
         const { sub, email, name} = payload;
+        console.log(payload);
 
         let user = await User.findOne({ email });
 
@@ -126,11 +127,12 @@ router.post('/google', async (req, res) => {
                 userId: sub,
                 email,
                 name,
-                role: 'user', 
+                role: role, 
                 password: '$2a$10$DUMMY_HASHED_PASSWORD' 
             });
             await user.save();
         }
+        console.log(user.role);
 
         const token = jwt.sign(
             {

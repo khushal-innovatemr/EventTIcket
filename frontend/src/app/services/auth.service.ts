@@ -55,8 +55,8 @@ export class AuthService {
     return this.http.delete(`${this.API_URL}/user-delete/${userId}`,{headers:this.getHeaders(),withCredentials:true});
   }
 
-  googleLogin(credential: string): Observable<any> {
-    return this.http.post(`${this.API_URL}/google`, { credential });
+  googleLogin(credential: string,role:any): Observable<any> {
+    return this.http.post(`${this.API_URL}/google`, { credential,role });
   }
 
 }

@@ -41,17 +41,26 @@
     (click)="login()">
     Login       
   </button>
+
   <div class="divider"></div>
 
   <hr>
   <br>
   <p class = "sig-google text-red-800">OR</p>
-  <p class = "sign-in-google text-blue-800">Sign In With Google</p>
+  <!-- <p class = "sign-in-google text-blue-800">Sign In With Google</p> -->
   
-  <div id="g_id_signin"></div>
+  <label for="role" class="text-sm font-xl font-bold text-blue-700 mb-1">Choose Your Role</label>
+  <select [(ngModel)]="role" name="role" class="p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+    <option value="organizer">organizer</option>
+    <option value="user">user</option> 
+  </select>
+  
+  <div id="g_id_signin" [hidden]="!role"></div>
+  {{role}}
+</form>
+  
+  <div class="text-center mt-4">  
+    <a routerLink="/register" class="text-blue-600 hover:text-blue-800 font-medium transition">Don't have an account? Register</a>
+  </div>
    
-    <div class="text-center mt-4">
-      <a routerLink="/register" class="text-blue-600 hover:text-blue-800 font-medium transition">Don't have an account? Register</a>
-    </div>
-  </form>
 </div>

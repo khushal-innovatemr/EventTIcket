@@ -64,7 +64,7 @@ export const routes: Routes = [
     {
         path: 'user',
         component:UserComponent,
-        // canActivate:[AdminGuard,OrganizerGuard]
+        canActivate:[AdminGuard,OrganizerGuard]
     },
     {
         path:'organise',
