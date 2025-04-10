@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService { 
+export class AuthService {
   private API_URL = 'http://localhost:3000/auth';
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -53,6 +53,10 @@ export class AuthService {
     console.log('-------------------------x-----------------')
     console.log('Deleting user with ID:', userId);
     return this.http.delete(`${this.API_URL}/user-delete/${userId}`,{headers:this.getHeaders(),withCredentials:true});
+  }
+
+  googleLogin(credential: string): Observable<any> {
+    return this.http.post(`${this.API_URL}/google`, { credential });
   }
 
 }

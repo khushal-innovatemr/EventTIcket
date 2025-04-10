@@ -1,0 +1,270 @@
+ 
+1. Google Cloud Setup
+Go to Google Cloud Console
+
+Create a project → Enable OAuth 2.0 Client ID
+
+Add http://localhost:4200 to Authorized JavaScript origins
+
+Save the Client ID
+
+2. Angular Frontend
+index.html
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+login.component.html
+<div class="login-container">
+  <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
+    <h2>Login</h2>
+    <input formControlName="email" placeholder="Email" type="email" />
+    <input formControlName="password" placeholder="Password" type="password" />
+    <button type="submit">Login</button>
+  </form>
+
+  <div class="divider">OR</div>
+  <div id="g_id_signin"></div>
+</div>
+login.component.ts
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
+
+declare const google: any;
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+})
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+    });
+
+    google.accounts.id.initialize({
+      client_id: 'YOUR_GOOGLE_CLIENT_ID',
+      callback: (res: any) => this.handleGoogleLogin(res),
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById('g_id_signin'),
+      { theme: 'outline', size: 'large' }
+    );
+  }
+
+  onLogin() {
+    const { email, password } = this.loginForm.value;
+    this.authService.login(email, password).subscribe({
+      next: (res) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(res.user));
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => alert('Login failed: ' + err.error.message),
+    });
+  }
+
+  handleGoogleLogin(response: any) {
+    this.authService.googleLogin(response.credential).subscribe({
+      next: (res) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(res.user));
+        this.router.navigate(['/dashboard']);
+      },
+      error: () => alert('Google login failed.'),
+    });
+  }
+}
+3. auth.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private baseUrl = 'http://localhost:3000/api/auth';
+
+  constructor(private http: HttpClient) {}
+
+  login(email: string, password: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login`, { email, password });
+  }
+
+  googleLogin(credential: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/google`, { credential });
+  }
+}
+4. app.module.ts
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
+@NgModule({
+  imports: [
+    ReactiveFormsModule,
+    HttpClientModule,
+    // other modules
+  ],
+})
+export class AppModule {}
+5. Node.js Backend (Express)
+Install Required Package
+npm install google-auth-library
+auth.controller.js
+const { OAuth2Client } = require('google-auth-library');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const client = new OAuth2Client('YOUR_GOOGLE_CLIENT_ID');
+
+exports.googleLogin = async (req, res) => {
+  const { credential } = req.body;
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: 'YOUR_GOOGLE_CLIENT_ID',
+    });
+
+    const payload = ticket.getPayload();
+    const { sub, email, name, picture } = payload;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = new User({ googleId: sub, email, name, picture });
+      await user.save();
+    }
+
+    const token = jwt.sign({ id: user._id }, 'your_jwt_secret', {
+      expiresIn: '1d',
+    });
+
+    res.json({ token, user });
+  } catch (err) {
+    console.error('Google login error', err);
+    res.status(401).json({ message: 'Invalid Google token' });
+  }
+};
+auth.routes.js
+const express = require('express');
+const router = express.Router();
+const { googleLogin } = require('../controllers/auth.controller');
+
+router.post('/google', googleLogin);
+module.exports = router;
+6. Mongoose Model (Optional Example)
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+  googleId: String,
+  email: String,
+  name: String,
+  picture: String,
+});
+
+module.exports = mongoose.model('User', userSchema);
+7. Display Logged-In User
+const user = JSON.parse(localStorage.getItem('user') || '{}');
+console.log(`Hi, ${user.name}`);
+
+
+
+
+
+
+
+
+
+
+
+Khushal Jain
+13:00 (2 minutes ago)
+to me
+
+const express = require('express');
+const router = express.Router();
+const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
+const bcrypt = require('bcryptjs');
+const User = require('../models/User');
+
+const client = new OAuth2Client('YOUR_GOOGLE_CLIENT_ID');
+
+// Helper to generate JWT
+const generateToken = (id) => {
+  return jwt.sign({ id }, 'your_jwt_secret', { expiresIn: '1d' });
+};
+
+// NORMAL EMAIL/PASSWORD LOGIN
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: 'User not found' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
+
+    const token = generateToken(user._id);
+    res.json({ token, user });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// GOOGLE LOGIN
+router.post('/google', async (req, res) => {
+  const { credential } = req.body;
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: 'YOUR_GOOGLE_CLIENT_ID',
+    });
+
+    const payload = ticket.getPayload();
+    const { sub, email, name, picture } = payload;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = new User({ googleId: sub, email, name, picture });
+      await user.save();
+    }
+
+    const token = generateToken(user._id);
+    res.json({ token, user });
+  } catch (err) {
+    console.error('Google login error:', err);
+    res.status(401).json({ message: 'Invalid Google token' });
+  }
+});
+
+// OPTIONAL: GET CURRENT USER
+router.get('/me', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ message: 'No token provided' });
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, 'your_jwt_secret');
+    const user = await User.findById(decoded.id).select('-password');
+    res.json(user);
+  } catch (err) {
+    res.status(403).json({ message: 'Invalid token' });
+  }
+});
+
+module.exports = router;
+

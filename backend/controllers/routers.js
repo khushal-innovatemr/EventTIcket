@@ -10,7 +10,11 @@ const dotenv = require('dotenv');
 const app = express();
 const router = express.Router();
 const bodyParser = require('body-parser');
-const verify = require('../middleware/auth')
+const verify = require('../middleware/auth');
+
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client('1015469568453-jr3b9jqs2ca014ta6h8s0o24l34ocruf.apps.googleusercontent.com');
+
 db;
 dotenv.config();
 
@@ -88,6 +92,7 @@ router.delete('/user-delete/:id', verify, async (req, res) => {
     else {
         try {
             await Bookings.deleteMany({ Booking_id: userId });
+            await Event.deleteMany({ organizer_id: userId });
             const user = await User.findOneAndDelete({ userId: userId });
 
             if (!user) {
@@ -101,6 +106,58 @@ router.delete('/user-delete/:id', verify, async (req, res) => {
     }
 
 });
+
+router.post('/google', async (req, res) => {
+    const { credential } = req.body;
+
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: '1015469568453-jr3b9jqs2ca014ta6h8s0o24l34ocruf.apps.googleusercontent.com',
+        });
+
+        const payload = ticket.getPayload();
+        const { sub, email, name} = payload;
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            user = new User({
+                userId: sub,
+                email,
+                name,
+                role: 'user', 
+                password: '$2a$10$DUMMY_HASHED_PASSWORD' 
+            });
+            await user.save();
+        }
+
+        const token = jwt.sign(
+            {
+                name: user.name,
+                userId: user.userId,
+                email: user.email,
+                role: user.role
+            },
+            process.env.JWT_SECRET || 'adshgadjahdjajkdakdasdhslkj',
+            { expiresIn: '1d' }
+        );
+
+        res.cookie('userId', user.userId, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+            sameSite: 'strict'
+        }).json({
+            message: 'Google Login success',
+            token: token,
+            role: user.role
+        });
+    } catch (err) {
+        console.error('Google login error:', err);
+        res.status(401).json({ message: 'Invalid Google token' });
+    }
+});
+
 
 
 module.exports = router;

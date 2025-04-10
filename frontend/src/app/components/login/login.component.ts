@@ -1,9 +1,11 @@
+declare const google:any
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 const clientID = '1015469568453-jr3b9jqs2ca014ta6h8s0o24l34ocruf.apps.googleusercontent.com';
+
 
 @Component({
   selector: 'app-login',
@@ -17,15 +19,42 @@ export class LoginComponent {
   password = '';
   message = '';
   isSuccess = false;
-  token: string | null = null;
+  token: any | null = null;
   errorMessage = '';
   showTokenMessage = false;
   showRedirectMessage = false;
   clientId:any;
   successMessage: any;
   failureMessage: any;
+  user:any;
 
   constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(){
+    setTimeout(() => {
+      google.accounts.id.initialize({
+        client_id: '1015469568453-jr3b9jqs2ca014ta6h8s0o24l34ocruf.apps.googleusercontent.com',
+        callback: (res: any) => this.handleGoogleLogin(res),
+      });
+  
+      google.accounts.id.renderButton(
+        document.getElementById('g_id_signin'),
+        { theme: 'outline', size: 'large' }
+      );
+  
+  });
+  }
+
+  handleGoogleLogin(v: any) {
+    this.authService.googleLogin(v.credential).subscribe({
+      next: (res) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(res.user));
+        this.router.navigate(['/user']);
+      },
+      error: () => alert('Google login failed.'),
+    });
+  }
 
   login(): void {
     this.authService.login(this.email, this.password).subscribe({
@@ -56,19 +85,4 @@ export class LoginComponent {
       }
     });
   }
-  
- GoogleLogin(){
-  this.clientId = {clientID}
-  this.successMessage = this.onSuccess;
-  this.failureMessage = this.onFailure;
- }
-
- onSuccess = async(res:any) => {
-  console.log(res.profileObj);
- }
-
- onFailure = async(res:any) => {
-  console.log(res);
- }
-
 }

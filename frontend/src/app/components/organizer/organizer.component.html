@@ -42,16 +42,7 @@
     </div>
   </div>
 
-  <div *ngIf="showEvents && eve?.length">
-    <h2 class="text-2xl font-semibold mb-4">Booked Events</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div *ngFor="let event of eve" class="border p-4 rounded-lg shadow-md bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-        <p><strong>Event Name:</strong> {{ event.name }}</p>
-        <p><strong>Organised By: </strong>{{event.org}}</p>
-        <p><strong>Available Tickets:</strong> {{ event.avail_ticket }}</p>
-      </div>
-    </div>
-  </div>
+
 
 
  

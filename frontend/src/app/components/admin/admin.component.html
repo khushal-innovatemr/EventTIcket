@@ -5,16 +5,21 @@
   </span>
 </div>
 
-<div class="px-4 py-8 mt-10">
-  <div class="flex flex-col md:flex-row items-center justify-between mb-9">
-    <div
-      class="flex flex-col text-3xl font-semibold bg-blue-50 p-3 pr-20 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300 ease-in-out shadow-lg mb-4 md:mb-0 w-full md:w-auto px-8 item justify-start">
+<div
+      class="flex flex-col text-4xl font-semibold bg-blue-50 p-5 mb-6 pr-20 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300 ease-in-out shadow-lg mb-7 md:mb-0 w-full md:w-auto px-8 max-w-lg">
       Admin Dashboard
-    </div>
+</div>
 
+
+<div class="px-4 py-8 mt-12">
+  <div class="flex flex-col md:flex-row items-center justify-between mb-9">
+    
+    <button (click)="AmountCollection()"
+    class="bg-orange-500 hover:bg-orange-600 active:bg-orange-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-50">Earning
+    of All Events</button>
 
     <button (click)="adminregister()"
-      class="bg-green-500 hover:bg-green-600 active:bg-green-700 p-2 px-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 flex items-center">
+      class="bg-green-500 hover:bg-green-600 active:bg-green-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
         <path
           d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
@@ -23,7 +28,7 @@
     </button>
 
     <button (click)="ViewEvents()"
-      class="bg-green-500 hover:bg-green-600 active:bg-green-700 p-2 px-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 flex items-center">
+      class="bg-green-500 hover:bg-green-600 active:bg-green-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
         <path
           d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
@@ -31,65 +36,71 @@
       View Events
     </button>
 
+    <button (click)="EventsBooked()"
+      class="bg-purple-500 hover:bg-purple-600 active:bg-purple-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
+      Events Booked
+    </button>
+
     <!-- <button *ngIf="isLoggedIn()"
               (click)="logout()"
               class="ml-auto bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-md transition duration-300 ease-in-out transform hover:scale-105">
         Logout
       </button> -->
-      
-    </div>
-    
-          <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col my-3 p-6 rounded-xl bg-white shadow-xl hover:shadow-2xl transition-all duration-300">
-                <button (click)="CheckUser()"
-                    class="bg-green-500 hover:bg-green-600 active:bg-green-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                    </svg>
-                    View Users
-                </button>
-    
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white shadow-lg rounded-xl overflow-hidden">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="py-3 px-6 text-left text-gray-600 font-semibold">Name</th>
-                                <th class="py-3 px-6 text-left text-gray-600 font-semibold">Role</th>
-                                <th class="py-3 px-6 text-left text-gray-600 font-semibold">Action</th> 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (task of tasks; track task.id){
 
-                              <tr class="hover:bg-blue-50 transition duration-200 border-b border-gray-100">
-                                <td class="py-4 px-6 text-gray-700">{{ task.name }}</td>
-                                <td class="py-4 px-6">
-                                  <span
-                                  class="px-3 py-1 rounded-full text-xs font-medium {{ task.role === 'organizer' ? 'bg-purple-100 text-red-800' : 'bg-blue-100 text-blue-800' }}">
-                                  {{ task.role }}
-                                </span>
-                              </td>
-                              <td>
-                                <button (click)="deleteUser(task.userId)"  class="bg-red-500 hover:bg-red-600 active:bg-green-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
-                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                    <path
-                                    d="M9 6a3   3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                                  </svg>
-                                  Delete User
-                                </button>
-                              </td>
-                            </tr>
-                          } 
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <!-- <div class='flex justify-between p-4 bg-pink  -100 rounded-lg shadow-md mb-2'>
+  </div>
+
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col my-3 p-6 rounded-xl bg-white shadow-xl hover:shadow-2xl transition-all duration-300">
+      <button (click)="CheckUser()"
+        class="bg-green-500 hover:bg-green-600 active:bg-green-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+        </svg>
+        View Users
+      </button>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white shadow-lg rounded-xl overflow-hidden">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="py-3 px-6 text-left text-gray-600 font-semibold">Name</th>
+              <th class="py-3 px-6 text-left text-gray-600 font-semibold">Role</th>
+              <th class="py-3 px-6 text-left text-gray-600 font-semibold">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (task of tasks; track task.id){
+
+            <tr class="hover:bg-blue-50 transition duration-200 border-b border-gray-100">
+              <td class="py-4 px-6 text-gray-700">{{ task.name }}</td>
+              <td class="py-4 px-6">
+                <span
+                  class="px-3 py-1 rounded-full text-xs font-medium {{ task.role === 'organizer' ? 'bg-purple-100 text-red-800' : 'bg-blue-100 text-blue-800' }}">
+                  {{ task.role }}
+                </span>
+              </td>
+              <td>
+                <button (click)="deleteUser(task.userId)"
+                  class="bg-red-500 hover:bg-red-600 active:bg-green-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      d="M9 6a3   3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                  </svg>
+                  Delete User
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- <div class='flex justify-between p-4 bg-pink  -100 rounded-lg shadow-md mb-2'>
                     </div> -->
-                  </div>
-          
-                  <!-- <div class="max-w-6xl mx-auto">
+  </div>
+
+  <!-- <div class="max-w-6xl mx-auto">
                     <div class="flex flex-col my-3 p-6 rounded-xl bg-white shadow-xl hover:shadow-2xl transition-all duration-300">
                         <button (click)="toggleRequests()"
                             class="bg-green-500 hover:bg-green-600 active:bg-green-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
@@ -138,5 +149,16 @@
                           
                           -->
 
-                          <button (click)="AmountCollection()" class = "bg-orange-500 hover:bg-orange-600 active:bg-orange-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">Earning of All Events</button>
-                        </div>
+
+</div>
+<div *ngIf="showEvents && eve?.length">
+  <h2 class="text-2xl font-semibold mb-4">Booked Events</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div *ngFor="let event of eve"
+      class="border p-4 rounded-lg shadow-md bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+      <p><strong>Event Name:</strong> {{ event.name }}</p>
+      <p><strong>Organised By: </strong>{{event.org}}</p>
+      <p><strong>Available Tickets:</strong> {{ event.avail_ticket }}</p>
+    </div>
+  </div>
+</div>

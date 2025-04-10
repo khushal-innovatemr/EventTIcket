@@ -34,18 +34,22 @@
     </div>
 
     
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="1015469568453-jr3b9jqs2ca014ta6h8s0o24l34ocruf.apps.googleusercontent.com">    
-    <div class="g-signin2" data-onsuccess="onSignIn"></div> 
     <button 
-      type="submit" 
-      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md shadow transition duration-200 mt-2 disabled:opacity-50 disabled:cursor-not-allowed active:bg-blue-800 active:translate-y-0.5"
-      [disabled]="templateform.invalid"
-      (click)="login()">
-      Login       
-    </button>
-    
+    type="submit" 
+    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md shadow transition duration-200 mt-2 disabled:opacity-50 disabled:cursor-not-allowed active:bg-blue-800 active:translate-y-0.5"
+    [disabled]="templateform.invalid"
+    (click)="login()">
+    Login       
+  </button>
+  <div class="divider"></div>
+
+  <hr>
+  <br>
+  <p class = "sig-google text-red-800">OR</p>
+  <p class = "sign-in-google text-blue-800">Sign In With Google</p>
+  
+  <div id="g_id_signin"></div>
+   
     <div class="text-center mt-4">
       <a routerLink="/register" class="text-blue-600 hover:text-blue-800 font-medium transition">Don't have an account? Register</a>
     </div>

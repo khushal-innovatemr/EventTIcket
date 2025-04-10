@@ -26,6 +26,8 @@ export class AdminComponent {
   pending:any;
   showRequests:boolean = false;
   noeventmessage: any;
+  showEvents: boolean = false;
+  eve: any;
 
   constructor(private authService: AuthService, private eventService:EventService,private router: Router) {}
 
@@ -149,7 +151,29 @@ AmountCollection():void{
   this.router.navigate(['/amount']);
 }
 
+EventsBooked(): void {
+  this.showEvents = !this.showEvents; // Toggle visibility
+    this.See();
+}
 
+See(): void {
+  this.eventService.view_event().subscribe({
+      next: (res: any) => {
+          if (res.message) {
+              console.log('No Events message:', res.message);
+              this.eve = [];
+              this.noeventmessage = res.message;
+          } else {
+              console.log(res.events);
+              this.eve = res.events;
+             
+          }
+      },
+      error: (err) => {
+          console.error('Error fetching events:', err);
+      }
+  });
+}
 
 
 }
