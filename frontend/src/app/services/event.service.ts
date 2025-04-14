@@ -83,5 +83,9 @@ export class EventService {
   collectAmount():Observable<any>{
     return this.http.get(`${this.API_URL}/amount_collect`);
   }
+
+  chatData():Observable<any>{
+    return this.http.post(`${this.API_URL}/chats`,{})
+  }
 }
 

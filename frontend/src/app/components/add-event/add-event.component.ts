@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class AddEventComponent {
   name = '';
-  Event_date: any; 
+  Event_date: any;
   Event_id: any;
   ticket_price: any;
   venue: any;
@@ -28,26 +28,26 @@ export class AddEventComponent {
   showEvents: any;
   eve: any;
   noeventmessage: any;
- 
-  constructor(private eventService: EventService, private router: Router) {}
+
+  constructor(private eventService: EventService, private router: Router) { }
 
   add(): void {
     const formData = new FormData();
-    formData.append('name', this.name); 
+    formData.append('name', this.name);
     formData.append('Event_date', this.Event_date);
     formData.append('ticket_price', this.ticket_price);
     formData.append('venue', this.venue);
     formData.append('description', this.description);
     formData.append('type', this.type);
     formData.append('avail_ticket', this.avail_ticket);
-    
+
     if (this.image) {
       formData.append('image', this.image);
     }
 
     this.eventService.Add_event(formData).subscribe({
       next: (v) => {
-        console.log('---------------------------------------x',formData);
+        console.log('---------------------------------------x', formData);
         console.log(v);
         this.successMessage = 'Event Created!';
         this.router.navigate(['/view']);
@@ -57,7 +57,7 @@ export class AddEventComponent {
     });
   }
 
-  
+
 
   resetForm() {
     this.name = '';
@@ -67,11 +67,11 @@ export class AddEventComponent {
     this.ticket_price = '';
     this.venue = '';
     this.type = '';
-    this.image = null; 
+    this.image = null;
     this.avail_ticket = '';
   }
-  
-  
+
+
 
   fileSelected(event: any) {
     const file = event.target.files[0];
@@ -87,35 +87,31 @@ export class AddEventComponent {
     }
   }
 
-CreateEvent():void{
+  CreateEvent(): void {
     this.router.navigate(['/event'])
-}
+  }
 
-viewEvents():void{
-  this.router.navigate(['/organise'])
-}
+  viewEvents(): void {
+    this.router.navigate(['/organise'])
+  }
 
-See(): void {
-  this.eventService.view_event().subscribe({
+  Dashboard():void{
+    this.router.navigate(['/manager'])
+  }
+
+  See(): void {
+    this.eventService.view_event().subscribe({
       next: (res: any) => {
-          if (res.message) {
-              console.log('No Events message:', res.message);
-              this.eve = [];
-              this.noeventmessage = res.message;
-          } else {
-              console.log(res.events);
-              this.eve = res.events;
-             
-          }
+        this.eve = res.events;
       },
       error: (err) => {
-          console.error('Error fetching events:', err);
+        console.error('Error fetching events:', err);
       }
-  });
-}
+    });
+  }
 
-EventsBooked(): void {
-  this.showEvents = !this.showEvents; 
+  EventsBooked(): void {
+    this.showEvents = !this.showEvents;
     this.See();
   }
 }

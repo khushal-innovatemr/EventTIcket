@@ -19,12 +19,13 @@ import { EventOrganizerComponent } from './components/event-organizer/event-orga
 import { BookingComponent } from './components/booking/booking.component';
 import { TAComponent } from './components/t-a/t-a.component';
 import { AbcComponent } from './components/abc/abc.component';
+import { ConnectionComponent } from './components/connection/connection.component';
 
 export const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent,
-        canActivate:[RedirectGuard]
+        canActivate:[RedirectGuard],
     },
     {
         path: 'register',
@@ -90,8 +91,12 @@ export const routes: Routes = [
         component:AbcComponent
     },
     {
+        path:'connection',
+        component:ConnectionComponent
+    },
+    {
         path:'**',
         redirectTo:'home'
-    }
+    },
    
 ];

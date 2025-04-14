@@ -94,6 +94,10 @@ viewEvents():void{
   this.router.navigate(['/organise'])
 }
 
+Dashboard():void{
+  this.router.navigate(['manager'])
+}
+
 See(): void {
   this.eventService.view_event().subscribe({
       next: (res: any) => {

@@ -12,6 +12,7 @@ const Event = require('../models/EventSchema');
 const multer = require('multer');
 const verify = require('../middleware/auth');
 const Booking = require('../models/BookingSchema');
+const Chat = require('../models/chat');
 const nodemailer = require('nodemailer');
 const Calculation_Schema = require('../models/CalculationSchema');
 const Calculation = require('../models/CalculationSchema');
@@ -92,7 +93,7 @@ router.get('/view-event',verify, async (req, res) => {
                 ...event._doc,
                 image_url: (event.image_url && event.image_url.data) ? `data:${event.image_url.contentType};base64,${event.image_url.data.toString('base64')}` : null
             }));
-        return res.json({ events: eventsWithImageUrl, name: name });
+        return res.json({ events: eventsWithImageUrl, name: name ,role:role});
 
     } catch (err) {
         console.error("View event error:", err);
@@ -115,100 +116,6 @@ router.get('/admin-view',verify, async (req, res) => {
     }
 });
 
-// router.post('/book/:id', verify, async (req, res) => {
-//     try {
-//         const {Ticket} = req.body;
-//         const Booking_id = req.user.userId;
-//         const ticket_id = uuidv4();
-//         const evId = req.params.id; 
-//         const user_name = req.user.name;
-        
-//         const event = await Event.findOne({ Event_id: evId });
-//         if (!event) {
-//             return res.status(404).json({ message: "Event not found" });
-//         }
-//         const ab = event.name;
-//         const mb = event.org;
-//         const mc = event.Event_date;
-        
-//         if (event.avail_ticket <= 0) {
-//             return res.status(400).json({ message: "No tickets available" });
-//         }
-
-//         if (Ticket>5){
-//             console.log("max tickets exceeded by",Ticket-5)
-//             return res.status(400).json({message:"No more tickets can be booked",Tickets_Exceeded_by:Ticket-5});
-//         }
-//         const existingBooking = await Booking.findOne({ Booking_id:Booking_id, Event_id: evId });
-//         const date = Date.now();
-//         const newBooking = new Booking({user_name:user_name, Booking_id,org:mb, Event_id: evId,Event_Date:mc,Event_name:ab, date ,Ticket,Ticket_id:ticket_id,status:'pending'});
-        
-//         await newBooking.save();
-//         res.status(200).json({ message: "Booking Requested sent for approval" });
-//     } catch (err) {
-//         console.error("Unable to book tickets", err);
-//         return res.status(500).json({ error: "Server Error" });
-//     }
-// });
-
-router.post('/approval/:Ticket_id',async(req,res) => {
-    try{
-        const Ticket_id = req.params.Ticket_id;
-        const booking = await Booking.findOne({ Ticket_id:Ticket_id });
-
-        if (!booking) return res.status(404).json({ message: "Booking not found" });
-
-        const event = await Event.findOne({ Event_id: booking.Event_id });
-        if (!event) return res.status(404).json({ message: "Event not found" });
-
-        if (event.avail_ticket < booking.Ticket) {
-            return res.status(400).json({ message: "Not enough tickets available" });
-        }
-
-        booking.status = "approved";
-        await booking.save();
-        event.avail_ticket -= booking.Ticket;
-
-        const users = await User.findOne({ userId: booking.Booking_id });
-        const email = users.email;
-        const name = users.name;
-        const Event_id = booking.Event_id;
-        const Ticket = booking.Ticket;
-        const status = booking.status;
-
-        sendWelcomeEmail(email,name,Event_id,Ticket,status);
-        await event.save();
-
-        res.json({ message: "Booking approved", booking });
-    } catch (error) {
-        res.status(500).json({ message: "Error approving booking", error });
-    }
-});
-
-router.post("/reject/:Ticket_id", async (req, res) => {
-    try {
-        const { Ticket_id } = req.params;
-        const booking = await Booking.findOne({ Ticket_id:Ticket_id });
-
-        if (!booking) return res.status(404).json({ message: "Booking not found" });
-
-        booking.status = "rejected";
-        const users = await User.findOne({ userId: booking.Booking_id });
-        const email = users.email;
-        const name = users.name;
-        const Event_id = booking.Event_id;
-        const Ticket = booking.Ticket;
-        const status = booking.status;
-
-        sendWelcomeEmail(email,name,Event_id,Ticket,status);
-        await booking.save();
-        await Booking.findOneAndDelete({status:'rejected'});
-
-        res.json({ message: "Booking rejected", booking });
-    } catch (error) {
-        res.status(500).json({ message: "Error rejecting booking", error });
-    }
-});
 
 router.post('/cancel/:Ticket_id',async (req, res) => {
     try {
@@ -433,6 +340,21 @@ router.post('/:Event_Id/events', verify, async (req, res) => {
 router.get('/amount_collect',async(req,res) => {
     const view_amount = await Calculation.find({},'name org Ticket ticket_price Total_Amount')
     return res.json(view_amount);
+})
+
+
+router.post('/chats',async(req,res) => {
+    const chat_id = uuidv4();
+    try {
+        const chat_data = localStorage.getItem('messages')
+        console.log(chat_data);
+        const chats = new Chat({text:chat_data.text,sender:chat_data.sender,chat_id:chat_id});
+        await chats.save();
+        return res.send({ msg: "Chats Saved Successfully" });
+    } catch (error) {
+        console.error("Event Registration error:", error);
+        res.status(500).json({ error: "Server Error" });
+    }
 })
 
 module.exports = router;

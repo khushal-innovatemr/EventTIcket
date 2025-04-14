@@ -24,12 +24,12 @@
     "@angular/router": "^17.3.0",
     "@angular/ssr": "^17.3.11",
     "@stripe/stripe-js": "^3.5.0",
-    "angularx-social-login": "^2.3.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "googleapis": "^146.0.0",
     "ngx-stripe": "^17.2.0",
     "rxjs": "~7.8.0",
+    "socket.io-client": "^4.8.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },

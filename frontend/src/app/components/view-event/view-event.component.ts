@@ -31,17 +31,8 @@ export class ViewEventComponent implements OnInit {
   SeeEvents(): void {
     this.eventService.view_event().subscribe({
       next: (res: any) => {
-        if (res.message) {
-          console.log('No Events message:', res.message);
-          this.events = [];
-          this.noeventmessage = res.message;
-        } else {
-          this.events = res.events;
-          this.filtered_events = [...this.events]
-          this.events.forEach((v: any) => {
-            // console.log('Event ID:', v.Event_id);
-          });
-        }
+        this.events = res.events;
+        this.filtered_events = [...this.events]
       },
       error: (err) => {
         console.error('Error fetching events:', err);
@@ -69,17 +60,16 @@ export class ViewEventComponent implements OnInit {
   //   }
   // }
 
-  CurrentBooking(Event_Id: string):void{
-    for(let event of this.events){
-      console.log('a');
+  CurrentBooking(Event_Id: string): void {
+    for (let event of this.events) {
       if (Event_Id === event.Event_id) {
-        console.log('#####################',Event_Id);
-        console.log('$$$$$$$$$$$$$$$$$$$',event.Ticket);
-        
+        console.log('#####################', Event_Id);
+        console.log('$$$$$$$$$$$$$$$$$$$', event.Ticket);
+
         this.router.navigate(['/booking', Event_Id, event.Ticket]);
 
+      }
     }
-  }
   }
 
 
@@ -92,21 +82,21 @@ export class ViewEventComponent implements OnInit {
     });
   }
 
-  view_Events(){
+  view_Events() {
     this.router.navigate(['/user-view'])
   }
 
   filtered_events = [...this.events];
   search_filter = '';
 
-  filter_events(){
-    if(this.search_filter){
-      this.filtered_events = this.events.filter((event:any) => event.name.toLowerCase().includes(this.search_filter.toLowerCase()) ||
-      event.venue.toLowerCase().includes(this.search_filter.toLowerCase())||
-      event.type.toLowerCase().includes(this.search_filter.toLowerCase())
-    );
-  } 
-    else{
+  filter_events() {
+    if (this.search_filter) {
+      this.filtered_events = this.events.filter((event: any) => event.name.toLowerCase().includes(this.search_filter.toLowerCase()) ||
+        event.venue.toLowerCase().includes(this.search_filter.toLowerCase()) ||
+        event.type.toLowerCase().includes(this.search_filter.toLowerCase())
+      );
+    }
+    else {
       this.filtered_events = [...this.events];
     }
   }

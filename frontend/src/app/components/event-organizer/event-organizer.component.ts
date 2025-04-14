@@ -17,8 +17,9 @@ showEvents: boolean = false;
 createEvents:boolean = false;
 viewsEvents:boolean = false;
 name:any;
-  events: any;
-  filtered_events: any;
+role:any;
+events: any;
+filtered_events: any;
 
 constructor(private eventService: EventService, private router: Router) { }
 
@@ -31,8 +32,13 @@ CreateEvent():void{
 }
 
 viewEvents():void{
-  this.router.navigate(['/organise'])
+  this.router.navigate(['/organise']) 
 }
+
+SeeConnection(){
+  this.router.navigate(['/connection'])
+}
+
 
 See(): void {
   this.eventService.view_event().subscribe({
@@ -46,6 +52,7 @@ See(): void {
               console.log(res);
               this.eve = res.events;
               this.name = res.name;
+              this.role = res.role;
              
           }
       },

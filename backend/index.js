@@ -1,15 +1,24 @@
 const express = require('express');
 const cors = require('cors');
-const app = express();
-const router = require('./controllers/routers')
-const routes = require('./controllers/event_router')
-const PORT = 3000;
+const http = require('http'); 
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-// const mongoose  =require('mongoose');
 
-// mongoose.set('debug',true);
+const app = express();
+const server = http.createServer(app);
+const { Server } = require('socket.io'); 
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:4200",
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        credentials: true
+    }
+});
+
+const router = require('./controllers/routers')
+const routes = require('./controllers/event_router')
+const PORT = 3000;
 
 app.use(express.json())
 app.use(cors({
@@ -23,20 +32,30 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'your_session_secret',
     resave: false,
     saveUninitialized: false,
-
 }));
 
-app.use(express.json());
 app.use(bodyParser.json());
-app.use(cookieParser());
-
 
 app.use('/auth', router);
-app.use('/event',routes)
+app.use('/event', routes);
 
-app.get('/',(req,res) => {
+app.get('/', (req, res) => {
     res.send("Hello Ji")
-})
-app.listen(PORT, () => {
+});
+
+io.on('connection', (socket) => {
+    console.log('New client connected');
+
+    socket.on('message', (data) => {
+        // console.log('Received message:', data);
+        io.emit('message', data);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
+
+server.listen(PORT, () => {
     console.log(`App has started on port ${PORT}`);
 });
