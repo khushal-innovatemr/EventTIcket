@@ -20,6 +20,7 @@ import { BookingComponent } from './components/booking/booking.component';
 import { TAComponent } from './components/t-a/t-a.component';
 import { AbcComponent } from './components/abc/abc.component';
 import { ConnectionComponent } from './components/connection/connection.component';
+import { ChatsComponent } from './components/chats/chats.component';
 
 export const routes: Routes = [
     {
@@ -93,6 +94,10 @@ export const routes: Routes = [
     {
         path:'connection',
         component:ConnectionComponent
+    },
+    {
+        path:'chats',
+        component:ChatsComponent
     },
     {
         path:'**',

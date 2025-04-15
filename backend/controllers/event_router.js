@@ -343,17 +343,31 @@ router.get('/amount_collect',async(req,res) => {
 })
 
 
-router.post('/chats',async(req,res) => {
-    const chat_id = uuidv4();
+
+router.post('/chats', async (req, res) => {
     try {
-        const chat_data = localStorage.getItem('messages')
-        console.log(chat_data);
-        const chats = new Chat({text:chat_data.text,sender:chat_data.sender,chat_id:chat_id});
+        const chat_id = uuidv4();
+        const { messages } = req.body;
+
+        const chats = new Chat({ messages, chat_id});
         await chats.save();
-        return res.send({ msg: "Chats Saved Successfully" });
+
+        return res.status(200).json({ msg: "Chats saved successfully", savedChats: chats });
     } catch (error) {
-        console.error("Event Registration error:", error);
-        res.status(500).json({ error: "Server Error" });
+        console.error("Error saving chats:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+
+router.get('/chats',async(req,res) => {
+    try {
+        const view_chats = await Chat.find()
+        console.log(view_chats);
+        return res.json({ view_chats:view_chats});
+    } catch (err) {
+        console.error("View event error:", err);
+        return res.status(500).json({ error: "Server Error" });
     }
 })
 

@@ -5,14 +5,20 @@
       <input [(ngModel)]="newMessage" placeholder="Enter Your Message" />
       <button (click)="sendMessage()">Send Message</button>
     </div>
-  
+
+    
+    
     <div>
       <h2>Messages:</h2>
       <ul>
         @for (message of messageData; track $index) {
-          <li>{{message.sender}}({{message.role}}): {{message.text}}</li>
+          <li>{{message.sender}}: {{message.text}}</li>
         }
       </ul>
+    </div>
+    
+    <div>
+      <button (click)="saveMessage()">saveMessage</button>
     </div>
   </div>
   

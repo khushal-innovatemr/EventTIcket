@@ -14,70 +14,74 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ConnectionComponent implements OnInit, OnDestroy {
   private messageSubscription!: Subscription;
-  messageData: { sender: string, text: string, role:string }[] = [];
+  messageData: { sender: string; text: string; role: string }[] = [];
   newMessage: string = '';
-  names: string = ''; 
-  roles:string = ''
+  names: string = '';
+  roles: string = '';
   eve: any;
   chat_data: any;
 
   constructor(
     private socket: SocketService,
     private eventService: EventService,
-    private authService:AuthService
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.See();
-    this.chats();
+    this.sendMessage();
 
-    this.messageSubscription = this.socket.on('message').subscribe((data) => {
-      console.log("Received from socket:", data);
-      console.log(data.text);
-      this.messageData.push(data); 
-      if(data.text === 'disconnect'){
-        console.log('you have disconnected the chat please login again to connect')
+    this.messageSubscription = this.socket.on('message').subscribe((data: any) => {
+      console.log('Received from socket:', data);
+      this.messageData.push(data);
+
+      if (data.text === 'disconnect') {
+        console.log('You have disconnected from the chat. Please login again to reconnect.');
         this.authService.logout();
       }
+
       localStorage.setItem('messages', JSON.stringify(this.messageData));
     });
   }
 
-  sendMessage() {
-      const data = {
-        sender: this.names,
-        text: this.newMessage,
-        role:this.roles,
-      };
-      this.socket.emit('message', data);
-      this.newMessage = '';
+  sendMessage(){
+    if(!this.newMessage.trim()) return;
+
+    const data = {sender:this.names,text:this.newMessage};
+    this.socket.emit('message',data);
+
+    this.newMessage = '';
+    }
+
+  saveMessage() {
+
+    this.eventService.chatData(this.messageData).subscribe({
+      next: (res: any) => {
+        console.log('Chat saved:', res);
+        this.messageData = [];
+      },
+      error: (err) => {
+        console.error('Error saving chat:', err);
+      }
+    });
+
   }
 
   ngOnDestroy() {
     if (this.messageSubscription) {
-      this.messageSubscription.unsubscribe(); 
+      this.messageSubscription.unsubscribe();
     }
   }
 
   See(): void {
     this.eventService.view_event().subscribe({
       next: (res: any) => {
-        this.names = res.name; 
+        this.names = res.name;
         this.roles = res.role;
-
-        // console.log("Sender Name:", this.names,this.roles);
       },
       error: (err) => {
-        console.error('Error fetching events:', err);
+        console.error('Error fetching user data:', err);
       }
     });
-  }
-
-  chats():void{
-    this.eventService.chatData().subscribe({
-      next:(res:any) => {
-        this.chat_data = res.data;
-      }
-    })
   }
 }

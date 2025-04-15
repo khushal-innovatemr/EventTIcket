@@ -52,6 +52,10 @@ export class AdminComponent {
     this.router.navigate(['/admin-view']);
   }
 
+  viewchats(){
+    this.router.navigate(['/chats'])
+  }
+  
   CheckUser(): void {
     if (this.flag) {
       this.flag = !this.flag

@@ -22,7 +22,8 @@ export class UserComponent {
 
   ngOnInit(): void {
     this.See()
-  } 
+   
+  }
 
   SeeEvents() {
     this.router.navigate(['/view'])
@@ -35,6 +36,8 @@ export class UserComponent {
   SeeConnection(){
     this.router.navigate(['/connection'])
   }
+
+
   
   See(): void {
     this.eventService.view_event().subscribe({
@@ -48,5 +51,4 @@ export class UserComponent {
       }
     });
   }
-
 }
