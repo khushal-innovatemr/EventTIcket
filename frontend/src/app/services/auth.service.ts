@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.API_URL}/login`, { email, password}, this.header_options);
+    return this.http.post(`${this.API_URL}/login`, { email, password}, {headers:this.getHeaders(),withCredentials:true});
   }
 
   register(name:string, email: string, password: string, role: string): Observable<any> {

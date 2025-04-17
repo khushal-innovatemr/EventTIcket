@@ -61,6 +61,8 @@ router.post('/login', async (req, res) => {
             role: user.role,
         })
         console.log("cookies", req.cookies)
+        console.log("cookies", req.cookies)
+
     }
     catch (err) {
         console.error("Login Error:", err);

@@ -363,7 +363,7 @@ router.post('/chats', async (req, res) => {
 router.get('/chats',async(req,res) => {
     try {
         const view_chats = await Chat.find()
-        console.log(view_chats);
+        console.log('xxxxxxxxxxxxxxxxx',view_chats);
         return res.json({ view_chats:view_chats});
     } catch (err) {
         console.error("View event error:", err);

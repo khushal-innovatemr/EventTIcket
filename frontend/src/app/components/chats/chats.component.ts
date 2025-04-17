@@ -36,12 +36,7 @@ updatechat(){
 
         this.chatss.forEach((v: any) => {
           this.messages = v.messages;
-          console.log(v);
-          console.log(v.messages);
       }); 
-
-        console.log('xxxxxxxxx',this.chatss);
-        console.log('yyyyyyyy',this.messages);
       },
       error: (error) => {
         console.error('Error fetching chats:', error);

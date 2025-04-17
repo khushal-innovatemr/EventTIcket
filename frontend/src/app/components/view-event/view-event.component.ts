@@ -110,5 +110,9 @@ export class ViewEventComponent implements OnInit {
     this.selectedEvent = null;
   }
 
+  userDashboard(){
+    this.router.navigate(['/user'])
+  }
+
 
 }

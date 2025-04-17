@@ -72,4 +72,7 @@ export class UserViewComponent {
     this.router.navigate(['/view'])
   }
 
+  userDashboard(){
+    this.router.navigate(['/user'])
+  }
 }

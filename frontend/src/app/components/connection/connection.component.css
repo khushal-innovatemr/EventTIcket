@@ -38,7 +38,7 @@ div {
     padding: 10px 20px;
     font-size: 16px;
     color: #fff;
-    background-color: #007bff;
+    background-color: #0088ff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -46,7 +46,7 @@ div {
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: #9200b3;
   }
   
   h2 {
@@ -65,14 +65,10 @@ div {
     padding: 10px;
     margin-bottom: 5px;
     border-radius: 4px;
-    background-color: #e9ecef;
     font-size: 16px;
     color: #333;
   }
-    
-    li:nth-child(odd) {
-        background-color: #d4edda;
-    }
+  
     
   li span {
     font-weight: bold;

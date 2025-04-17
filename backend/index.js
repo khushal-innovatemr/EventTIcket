@@ -43,19 +43,40 @@ app.get('/', (req, res) => {
     res.send("Hello Ji")
 });
 
-io.on('connection', (socket) => {
-    console.log('New client connected');
+// io.on('connection', (socket) => {
+//     console.log('New client connected');
 
-    socket.on('message', (data) => {
-        // console.log('Received message:', data);
-        io.emit('message', data);
+//     socket.on('message', (data) => {
+//         const messageWithSender = { ...data, senderId: socket.id };
+
+//         io.emit('message', messageWithSender);
+//     });
+
+//     socket.on('disconnect', () => {
+//         console.log('Client disconnected');
+//     });
+// });
+
+io.on('connection', (socket) => {
+    console.log('New client connected:', socket.id);
+
+    socket.on('joinRoom', (roomName) => {
+        console.log(`${socket.id} joined room: ${roomName}`);
+        socket.join(roomName); 
+        socket.emit('message', { sender: 'System', text: `You have joined room: ${roomName}`, senderId: socket.id });
+    });
+
+    socket.on('roomMessage', ({ roomName, message, sender }) => {
+        console.log(`Message from ${sender} to room ${roomName}:`, message);
+        io.to(roomName).emit('message', { sender, text: message, senderId: socket.id });
     });
 
     socket.on('disconnect', () => {
-        console.log('Client disconnected');
+        console.log('Client disconnected:', socket.id);
     });
 });
 
 server.listen(PORT, () => {
     console.log(`App has started on port ${PORT}`);
 });
+

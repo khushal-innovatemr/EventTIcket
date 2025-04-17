@@ -5,11 +5,11 @@ const chatSchema = new mongoose.Schema({
         {
             sender: { type: String, required: true },
             text: { type: String, required: true },
+            _id: false 
         }
     ],
     chat_id: { type: String, required: true },
-    date:{type:Date, default:Date.now }
-
+    date:{type:Date, default:Date.now },
 });
 
 const Chats = mongoose.model("Chats", chatSchema);

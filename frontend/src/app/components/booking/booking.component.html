@@ -2,34 +2,15 @@
   {{ successmessage }}
 </div>
 
-<div class = "bg-white shadow-lg rounded-lg p-4 ml-4 mr-2 max-w-xl mx-auto absolute left-50%">
-  <h3 class = "text-3xl font-bold text-gray-800 mb-4 mr-7">Your Booking Details</h3>
-  <div class="gap-2 mb-4">
-    <label class="text-gray-700 text-xl">
-    Location: <strong>{{events?.venue}}</strong>
-    <hr>
-  </label>
-  <br>
-  <label class="text-gray-700 text-xl">
-    Event Name: <strong>{{events?.Event_name}}</strong>
-    <hr>
-  </label>
-  <br>
-    <label class="text-gray-700 text-xl">
-      Event Date: <strong>{{ formatDate(events?.Event_date)}}</strong>
-      <hr>
-    </label>
-    <br>
-
-    <label class="text-gray-700 text-xl">
-      Booking Date: <strong>{{formatDate(booking_date)}}</strong>
-      <hr>
-    </label>
-    <br>
-    <label class="text-gray-700 text-xl">
-      Tickets Purchased: <strong>{{tic}}</strong>
-      <hr>
-    </label>
+<div class="bg-white shadow-2xl rounded-xl p-6 max-w-3xl mx-auto mt-10 mb-8">
+  <h3 class="text-3xl font-bold text-gray-800 mb-6 text-center">Your Booking Details</h3>
+  
+  <div class="space-y-4 text-xl text-gray-700">
+    <p><span class="font-semibold">Location:</span> {{ events?.venue }}</p>
+    <p><span class="font-semibold">Event Name:</span> {{ events?.Event_name }}</p>
+    <p><span class="font-semibold">Event Date:</span> {{ formatDate(events?.Event_date) }}</p>
+    <p><span class="font-semibold">Booking Date:</span> {{ formatDate(booking_date) }}</p>
+    <p><span class="font-semibold">Tickets Purchased:</span> {{ tic }}</p>
   </div>
 </div>
   

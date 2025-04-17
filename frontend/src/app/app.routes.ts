@@ -21,6 +21,7 @@ import { TAComponent } from './components/t-a/t-a.component';
 import { AbcComponent } from './components/abc/abc.component';
 import { ConnectionComponent } from './components/connection/connection.component';
 import { ChatsComponent } from './components/chats/chats.component';
+import { ChatRoomComponent } from './components/chat-room/chat-room.component';
 
 export const routes: Routes = [
     {
@@ -98,6 +99,10 @@ export const routes: Routes = [
     {
         path:'chats',
         component:ChatsComponent
+    },
+    {
+        path:'chat-room/:name',
+        component:ChatRoomComponent,
     },
     {
         path:'**',
