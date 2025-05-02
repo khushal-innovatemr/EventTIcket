@@ -54,7 +54,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   }
 
   generateColor(id: string): string {
-    const colors = ['red','blue','purple','pink','green'];
+    const colors = ['black','gray','brown'];
     let hash = 0;
 
     for (let i = 0; i < id.length; i++) {
@@ -124,3 +124,5 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     this.router.navigate(['/user']);
   }
 }
+
+

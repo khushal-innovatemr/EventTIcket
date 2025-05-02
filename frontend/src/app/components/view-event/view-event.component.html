@@ -15,7 +15,6 @@
 
 
 
-  <h2 class="text-center my-4 text-2xl font-semibold">Events Coming Soon</h2>
 
   <div
     *ngIf="noeventmessage"
@@ -24,13 +23,18 @@
     {{ noeventmessage }}
   </div>
 
-  <input
-    type="text"
-    [(ngModel)]="search_filter"
-    (input)="filter_events()"
-    placeholder="Search events..."
-    class="p-4 mb-6 rounded-md hover:scale-105 shadow-lg w-full"
-  />
+  <h2 class="text-center text-3xl font-bold text-gray-800 mb-6">📅 Events Organized Around You</h2>
+
+  <div class="flex justify-center mb-8">
+    <input
+      type="text"
+      [(ngModel)]="search_filter"
+      (input)="filter_events()"
+      placeholder="🔍 Search events..."
+      class="w-full md:w-1/2 p-4 rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-transform transform hover:scale-105"
+    />
+  </div>
+
 
   <div *ngIf="events.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @for (event of filtered_events; track event.Event_id) {

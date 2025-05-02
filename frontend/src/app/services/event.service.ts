@@ -91,5 +91,13 @@ export class EventService {
   viewChat():Observable<any>{
     return this.http.get(`${this.API_URL}/chats`,{})
   }
+
+  viewPlayers(): Observable<any> {
+    return this.http.get(`${this.API_URL}/players`);
+  }
+
+  updatePlayers(userId:any):Observable<any>{
+    return this.http.put(`${this.API_URL}/players/${userId}`,{})
+  }
 }
 

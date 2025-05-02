@@ -20,7 +20,7 @@ export class OrganizerComponent {
   showTasks: boolean = false;
   views: any;
   name:any;
-
+  
 
 constructor(private eventService: EventService, private router: Router) { }
 
@@ -68,6 +68,7 @@ delete_event(Event_id: string): void {
               this.showTasks = false;
               this.currentEventId = '';
             }
+            this.OrganizerView();
       },
       error: (error: any) => {
           console.error('Error Deleting User:', error);

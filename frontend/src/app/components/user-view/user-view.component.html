@@ -1,53 +1,54 @@
-<div class="container mx-auto">
-    <div class="flex flex-col md:flex-row items-center justify-between mb-9">
+<div class="container mx-auto px-4 py-10">
+  <!-- Top Buttons -->
+  <div class="flex flex-col md:flex-row items-center justify-center md:justify-between mb-10 space-y-4 md:space-y-0 md:space-x-6">
     
     <button (click)="userDashboard()"
-      class="bg-green-500 hover:bg-green-600 active:bg-green-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-        <path
-          d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+      class="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg flex items-center space-x-2 transition duration-200">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
       </svg>
-      Dashboard
+      <span>Dashboard</span>
     </button>
 
     <button (click)="viewEvents()"
-      class="bg-red-500 hover:bg-red-600 active:bg-red-700 p-4 rounded-lg text-white font-semibold shadow-lg transition duration-200 mb-4 flex items-center w-40">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-        <path
-          d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+      class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg flex items-center space-x-2 transition duration-200">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
       </svg>
-      View Events
-    </button>      
-    </div>
-   
-   
-   
-    <h2 class="text-center my-4 text-2xl font-semibold">Events to Attend</h2>
-  
-    <div *ngIf="noeventmessage" class="bg-blue-100 border border-blue-300 text-blue-700 p-4 rounded-lg mb-4 shadow-md">
-      {{ noeventmessage }}
-    </div>
-   
-    <div *ngIf="events?.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 shadow-lg mt-10 mb-8">
-      <div *ngFor="let event of events; let i =index" class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-        <div class="space-y-4 text-xl text-gray-700 p-7">
-          <h5 class="text-2xl font-bold text-blue-600"><strong>{{i+1}}.Event Name: </strong>{{ event.Event_name }}</h5>
-          <h3 class="text-gray-700 text-lg"><strong>Organised By:</strong> {{ event.org }}</h3>
-          <!-- <h3 class="text-gray-700 text-xl my-2"><strong>Event_id: </strong>{{ event.Event_id }}</h3> -->
-          <!-- <h3 class="text-gray-700 text-xl"><strong>Booking_id:</strong>{{ event.Booking_id }}</h3> -->
-          <h3 class="text-gray-700 text-lg"><strong>Ticket_id:</strong>{{ event.Ticket_id}}</h3>
-          <h3 class="text-gray-700 text-lg"><strong>Booking Date: </strong>{{formatDate(event.date) }}</h3>
-          <h3 class="text-gray-700 text-lg"><strong>Event Date: </strong>{{ formatDate(event.Event_Date) }}</h3>
-          <h3 class="text-gray-700 text-lg"><strong>Tickets Purchased:</strong> {{event.Ticket}} </h3>
-        </div>
-        <button 
-        (click)="cancel_ticket(event.Ticket_id)" 
-        class="bg-red-600 text-white text-xl py-2 rounded-lg shadow-md hover:bg-red-700 transition duration-300 w-full text-center">
-        Cancel Ticket
-      </button>
+      <span>View Events</span>
+    </button>
+
+  </div>
+
+  <!-- Heading -->
+  <h2 class="text-center text-3xl font-extrabold text-gray-800 mb-8 tracking-tight">🎟️ Events You've Booked</h2>
+
+  <!-- Message if no events -->
+  <div *ngIf="noeventmessage"
+       class="bg-blue-100 border border-blue-300 text-blue-800 p-5 rounded-xl text-center shadow">
+    {{ noeventmessage }}
+  </div>
+
+  <!-- Events Grid -->
+  <div *ngIf="events?.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
+    <div *ngFor="let event of events; let i = index"
+         class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition transform hover:scale-[1.02] duration-300">
+
+      <!-- Event Content -->
+      <div class="p-6 space-y-4">
+        <h5 class="text-xl font-bold text-blue-600">{{ i + 1 }}. {{ event.Event_name }}</h5>
+        <p><strong class="text-gray-800">Organised By:</strong> {{ event.org }}</p>
+        <p><strong class="text-gray-800">Ticket ID:</strong> {{ event.Ticket_id }}</p>
+        <p><strong class="text-gray-800">Booking Date:</strong> {{ formatDate(event.date) }}</p>
+        <p><strong class="text-gray-800">Event Date:</strong> {{ formatDate(event.Event_Date) }}</p>
+        <p><strong class="text-gray-800">Tickets Purchased:</strong> {{ event.Ticket }}</p>
       </div>
+
+      <!-- Cancel Button -->
+      <button (click)="cancel_ticket(event.Ticket_id)"
+              class="w-full py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-b-2xl hover:from-red-600 hover:to-red-700 transition duration-300">
+        ❌ Cancel Ticket
+      </button>
     </div>
-  </div> 
-
-
-  
+  </div>
+</div>

@@ -12,6 +12,7 @@ const EventSchema = new mongoose.Schema({
     description:{type:String,required:true},
     image_url:{data: Buffer, contentType: String},
     avail_ticket:{type:Number,max:200},
+    selected_players:{type:Array,required:true}
    
 })
 

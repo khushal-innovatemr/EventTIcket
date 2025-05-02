@@ -1,41 +1,42 @@
-<div class="px-4 py-8 mt-10">
-  <div class="flex flex-col md:flex-row items-center justify-between mb-9 w-full">
-    
-    <!-- User Dashboard Heading -->
-    <div class="flex flex-col text-3xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 text-white p-6 rounded-xl shadow-xl mb-4 md:mb-0">
-      User Dashboard
-    </div>
-    
-    <!-- Welcome Message -->
-    <div class="fixed top-16 right-4 font-semibold max-w-sm bg-orange-100 text-center p-3 rounded-lg mt-5 shadow-lg border border-orange-200 transform transition-all duration-300 hover:bg-orange-200 z-40">
-      <span class="flex items-center">
-        Welcome, {{ name | titlecase }}
-      </span>
-    </div>
-    
-    <!-- View Events Button -->
-    <button (click)="SeeEvents()" class="bg-green-500 hover:bg-green-600 active:bg-green-700 p-3 px-6 rounded-full text-white font-semibold shadow-lg transition-transform duration-300 transform hover:scale-105 flex items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-      </svg>
-      View Events
-    </button> 
-    
-    <button (click)="SeeConnection()" class="bg-gray-500 hover:bg-green-600 active:bg-green-700 p-3 px-6 rounded-full text-white font-semibold shadow-lg transition-transform duration-300 transform hover:scale-105 flex items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-      </svg>
-      Let's Chat
-    </button>
+<div
+  class="flex flex-col text-4xl font-bold bg-gradient-to-r from-blue-100 to-blue-300 text-blue-900 px-8 py-6 mb-10 rounded-2xl hover:bg-blue-600 hover:text-white transition duration-300 shadow-2xl max-w-xl">
+  User Dashboard
+</div>
 
-    <!-- Check Your Bookings Button -->
-    <button (click)="SeeBookings()" class="bg-purple-500 hover:bg-purple-600 active:bg-purple-700 p-3 px-6 rounded-full text-white font-semibold shadow-lg transition-transform duration-300 transform hover:scale-105 flex items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-      </svg>
-      Check Your Bookings
-    </button>
+<div
+  class="fixed top-24 right-6 z-40 bg-orange-100 text-orange-900 px-5 py-3 rounded-xl shadow-md border border-orange-300 font-medium animate-fade-in-down">
+  👋 Welcome, {{ name | titlecase }}
+</div>
+<div class="px-4 py-10 mt-10 bg-blue-100 min-h-screen">
+  <div class="flex flex-col md:flex-row md:flex-wrap items-center justify-between gap-4 mb-10 w-full bg-blue-100">
 
-   
+    <div class="flex flex-wrap gap-4 mt-4 md:mt-0">
+      <button (click)="SeeEvents()"
+        class="flex items-center gap-2 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-transform transform hover:scale-105">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+        </svg>
+        View Events
+      </button>
+
+      <button (click)="SeeConnection()"
+        class="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 active:bg-gray-800 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-transform transform hover:scale-105">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+        </svg>
+        Let's Chat
+      </button>
+
+      <button (click)="SeeBookings()"
+        class="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 active:bg-purple-700 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-transform transform hover:scale-105">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+        </svg>
+        Check Your Bookings
+      </button>
+    </div>
   </div>
 </div>

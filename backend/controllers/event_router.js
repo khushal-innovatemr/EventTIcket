@@ -13,8 +13,8 @@ const multer = require('multer');
 const verify = require('../middleware/auth');
 const Booking = require('../models/BookingSchema');
 const Chat = require('../models/chat');
+const Players = require('../models/PlayerSchema');
 const nodemailer = require('nodemailer');
-const Calculation_Schema = require('../models/CalculationSchema');
 const Calculation = require('../models/CalculationSchema');
 const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 
@@ -63,7 +63,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router.post('/add-event',verify, upload.single('image'), async (req, res) => {
-    const { name, Event_date, ticket_price, venue, description, type, avail_ticket} = req.body;
+    const { name, Event_date, ticket_price, venue, description, type, avail_ticket,selected_players} = req.body;
     const Event_id = uuidv4();
     const org = req.user.name;
     const organizer_id = req.user.userId;
@@ -74,7 +74,7 @@ router.post('/add-event',verify, upload.single('image'), async (req, res) => {
 
         const imageData = req.file ? { data: req.file.buffer, contentType: req.file.mimetype } : null;
 
-        event = new Event({ name,org,Event_date, Event_id,organizer_id,ticket_price, venue, description, type, image_url: imageData, avail_ticket });
+        event = new Event({ name,org,Event_date, Event_id,organizer_id,ticket_price, venue, description, type, image_url: imageData, avail_ticket,selected_players });
         await event.save();
         return res.send({ msg: "Event Registered Successfully" });
     } catch (error) {
@@ -370,5 +370,43 @@ router.get('/chats',async(req,res) => {
         return res.status(500).json({ error: "Server Error" });
     }
 })
+
+// router.get('/players',async(req,res) => {
+//     try{
+//         const view_players = await Players.find({},'name')
+//         console.log('hulala',view_players);
+//         return res.json(view_players);
+//     }
+//     catch(err){
+//         console.error('No Players Found',err);
+//         return res.status(500).json({erorr:"Server Error"})
+//     }
+// })
+
+router.get('/players', async (req, res) => {
+    try {
+      const view_players = await Players.find();
+      console.log('Fetched players:', view_players);
+      return res.json(view_players);
+    } catch (err) {
+      console.error('Error fetching players:', err);
+      return res.status(500).json({ error: "Server Error" });
+    }
+  });
+
+  
+
+router.put('/players/:id',async(req,res) => {
+    try{
+        const id = req.params.id;
+        const update_list = await Players.findOne({userId:id})
+        return res.json(update_list);
+    }
+    catch(err){
+        console.error('No players are there',err);
+        return res.status(500).json({error:"Server Error"})
+    }
+})
+
 
 module.exports = router;

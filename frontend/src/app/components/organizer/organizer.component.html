@@ -1,44 +1,51 @@
-<div class="flex flex-col md:flex-row items-center justify-between mb-9 w-full">
-
-
-  <button (click)="CreateEvent()" class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 p-3 px-6 rounded-full text-white font-semibold shadow-lg">
-    Create Event
+<div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-10 w-full px-4">
+  <button (click)="CreateEvent()" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 p-3 px-6 rounded-full text-white font-semibold shadow-md transition-transform transform hover:scale-105">
+    + Create Event
   </button>
   
-    <button (click)="Dashboard()" class="bg-purple-500 hover:bg-purple-600 active:bg-purple-700 p-3 px-6 rounded-full text-white font-semibold shadow-lg">
-      Dashboard
-    </button>
+  <button (click)="Dashboard()" class="bg-purple-600 hover:bg-purple-700 active:bg-purple-800 p-3 px-6 rounded-full text-white font-semibold shadow-md transition-transform transform hover:scale-105">
+    🏠 Dashboard
+  </button>
 </div>
 
-<div class="container mx-auto">
-    <h2 class="text-center my-4 text-2xl font-semibold">Events Organized By the Team:</h2>
-    <div *ngIf="noeventmessage" class="bg-blue-100 border border-blue-300 text-blue-700 p-4 rounded-lg mb-4 shadow-md">
-      {{ noeventmessage }}
-    </div>
-    
-    <input type="text" [(ngModel)]="search_filter" (input)="filter_events()" placeholder="Search events..." class = 'p-4 mb-6 rounded-md hover:scale-105 shadow-lg'/>
-    <div *ngIf="events?.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let event of filtered_events; let i =index" class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-        <div class="p-6">
-            <h5 class="text-xl font-bold text-blue-600"><strong>{{i+1}}.Event Name: </strong>{{ event.name }}</h5>
-            <h3 class="text-gray-600">Date of Event: {{ formatDate(event.Event_date) }}</h3>
-            <h3 class="text-gray-600 my-2"><strong>Event-Genre: </strong>{{ event.type }}</h3>
-            <h3 class="text-gray-600"><strong>Price: </strong>{{ event.ticket_price }}</h3>
-            <h3 class="text-gray-600"><strong>Venue: </strong> {{event.venue}} </h3>
-            <h3 class="text-gray-600"><strong>description: </strong> {{event.description}} </h3>
-            <h3 class="text-gray-600"><strong>Tickets Available: </strong> {{event.avail_ticket}} </h3>
-            <div *ngIf="event.image_url" class="h-64 overflow-hidden">
-                <img [src]="event.image_url" alt="Event Image" class="w-full h-full object-cover">
-            </div>
-            <div class="p-6">
-              <button (click)="delete_event(event.Event_id)" class="bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 transition duration-300">Delete</button>
-            </div>
-        </div>
+<div class="container mx-auto px-4 pb-16">
+  <h2 class="text-center text-3xl font-bold text-gray-800 mb-6">📅 Events Organized By the Team</h2>
+
+  <div *ngIf="noeventmessage" class="bg-blue-50 border border-blue-300 text-blue-700 p-4 rounded-lg mb-6 shadow-sm text-center">
+    {{ noeventmessage }}
+  </div>
+
+  <div class="flex justify-center mb-8">
+    <input
+      type="text"
+      [(ngModel)]="search_filter"
+      (input)="filter_events()"
+      placeholder="🔍 Search events..."
+      class="w-full md:w-1/2 p-4 rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-transform transform hover:scale-105"
+    />
+  </div>
+
+  <div *ngIf="events?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div *ngFor="let event of filtered_events; let i = index" class="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-transform hover:scale-105">
+      <div class="p-6 space-y-2">
+        <h3 class="text-xl font-bold text-blue-600">{{ i + 1 }}. {{ event.name }}</h3>
+        <p class="text-gray-600"><strong>Date:</strong> {{ formatDate(event.Event_date) }}</p>
+        <p class="text-gray-600"><strong>Genre:</strong> {{ event.type }}</p>
+        <p class="text-gray-600"><strong>Price:</strong> ₹{{ event.ticket_price }}</p>
+        <p class="text-gray-600"><strong>Venue:</strong> {{ event.venue }}</p>
+        <p class="text-gray-600"><strong>Description:</strong> {{ event.description }}</p>
+        <p class="text-gray-600"><strong>Tickets Available:</strong> {{ event.avail_ticket }}</p>
+      </div>
+
+      <div *ngIf="event.image_url" class="h-60 w-full overflow-hidden">
+        <img [src]="event.image_url" alt="Event Image" class="w-full h-full object-cover" />
+      </div>
+
+      <div class="px-6 pb-6 pt-4">
+        <button (click)="delete_event(event.Event_id)" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-5 rounded-full shadow transition">
+          🗑️ Delete
+        </button>
       </div>
     </div>
   </div>
-
-
-
-
- 
+</div>
